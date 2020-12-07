@@ -5,7 +5,7 @@ const db = require('../lib/db')
 
 describe('channels', () => {
   
-  beforeEach( async () => {
+  /*beforeEach( async () => {
     await db.admin.clear()
   })
   
@@ -63,6 +63,6 @@ describe('channels', () => {
     .get(`/channels/${channel1.id}`)
     .expect(200)
     channel.name.should.eql('channel 1')
-  })
+  })*/
   
 })

@@ -80,46 +80,66 @@ module.exports = {
     },
   },
   users: {
+
+    // Ajoute un user en BDD
+    // Paramètre : user = {username: 'user_1'}
+    // retourne :  { { username: 'user_1', id: 'c50100a8-5fc0-4e62-8ad5-88941325a631' } }
+    // En BDD on a : users:8ca7a37b-6573-4dc3-a99f-90868573fd5b {"username":"user_1","password":"yy","email":"xx"}
     create: async (user) => {
       if(!user.username) throw Error('Invalid user')
       const id = uuid()
+      //console.log ("BD: "+`users:${id}`, JSON.stringify(user));
       await db.put(`users:${id}`, JSON.stringify(user))
+      //console.log ("DBR: "+JSON.stringify(merge(user, {id: id} ))); //dbg
       return merge(user, {id: id})
     },
+
+    // Recherche et renvoie un utilisateur à partir de son id
+    // Paramètre : l'id (string)
+    // retourne: l'utilisateur trouvé sous forme d'objet de type {"username":"user_1","id":"3af582ad-b589-483c-97a8-290f2712f8d3"}
     get: async (id) => {
       if(!id) throw Error('Invalid id')
       const data = await db.get(`users:${id}`)
       const user = JSON.parse(data)
       return merge(user, {id: id})
     },
+    
+    // Lister l'enseble des utilisateurs stockés en BDD
+    // Retourne un tableau de la forme : [ {"username":"user_1","id":"8157aa18-0ac8-45e3-ba97-ab42c2336c8b"},{...} ]
     list: async () => {
       return new Promise( (resolve, reject) => {
-        const users = []
+        const users = [];  // stocker tous les utilisateurs
+        
         db.createReadStream({
           gt: "users:",
           lte: "users" + String.fromCharCode(":".charCodeAt(0) + 1),
         }).on( 'data', ({key, value}) => {
           user = JSON.parse(value)
           user.id = key.split(':')[1]
-          users.push(user)
+          users.push(user)  // stocker l'utilisateur trouvé dans la liste des utilisateurs
         }).on( 'error', (err) => {
           reject(err)
         }).on( 'end', () => {
           resolve(users)
         })
-      })
+      });
     },
+
+    // TODO
     update: (id, user) => {
       const original = store.users[id]
       if(!original) throw Error('Unregistered user id')
       store.users[id] = merge(original, user)
     },
+
+    // TODO
     delete: (id, user) => {
       const original = store.users[id]
       if(!original) throw Error('Unregistered user id')
       delete store.users[id]
     }
   },
+
   admin: {
     clear: async () => {
       await db.clear()

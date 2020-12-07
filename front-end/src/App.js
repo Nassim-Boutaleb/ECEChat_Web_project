@@ -1,10 +1,16 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import './App.css';
-/** @jsx jsx */
-import { jsx } from '@emotion/core'
-import Header from './Header'
-import Footer from './Footer'
-import Main from './Main'
+import Header from './application/Header'
+import Footer from './application/Footer'
+import Main from './application/Main'
+import Signup from './login/Signup'
+import Login from './login/Login'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 const styles = {
   root: {
@@ -17,10 +23,26 @@ const styles = {
 } // fin styles
 
 
-export default () => (
+/*export default () => (
         <div className="App" style={styles.root}>
             <Header/>
             <Main/>
             <Footer/>
         </div>
+);  // fin export default*/
+
+/*export default () => (
+  <div className="App" style={styles.root}>
+      <Login/>
+  </div>
+);  // fin export default*/
+
+export default () => (
+  <div className="App" style={styles.root}>
+      <Switch>
+        <Route exact path ='/' component={Login} />
+        <Route exact path ='/signup' component={Signup} />
+        <Route exact path ='/Main' component={Main} />
+      </Switch>
+  </div>
 );  // fin export default

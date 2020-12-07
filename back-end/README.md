@@ -9,7 +9,7 @@ Start the web application:
 
 ```bash
 ./bin/start 
-Chat is waiting for you at http://localhost:3000
+Chat is waiting for you at http://localhost:3001
 ```
 
 Run the tests with mocha:
