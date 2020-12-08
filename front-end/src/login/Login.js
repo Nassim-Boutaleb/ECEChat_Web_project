@@ -30,8 +30,8 @@ const styles = {
 const Login = () => {
     
     // Etats pour stocker les valeurs du formulaire
-    const [username,setUsername] = useState(' ');
-    const [password, setPassword] = useState (' ');
+    const [username,setUsername] = useState('');
+    const [password, setPassword] = useState ('');
     
     // A l'envoi du formualire : appel à l'API pour récupérer la liste de tous les utilisateurs
     // et vérifier si login et mdp OK
@@ -46,15 +46,22 @@ const Login = () => {
 
         // Afficher
         console.log ("OOO "+JSON.stringify(data)+" "+data.length);
-        console.log (data[0].username);
+        console.log (data[14].username);
 
         let usernameTrouve = 0;
         let passCorrespond = 0;
+        let userId = null;
+        let userEmail = null;
+        let userName = null;
 
         // Vérifier login et password
         for (let i=0; i<data.length; ++i) {
             if (data[i].username === username) {
                 usernameTrouve ++;
+                userId = data[i].id;
+                userEmail = data[i].email;
+                userName = data[i].username;
+                console.log ("Heidi: "+userId);
                 if (data[i].password === password) {
                     passCorrespond ++;
                 }
@@ -64,6 +71,9 @@ const Login = () => {
         if (usernameTrouve > 0 && passCorrespond > 0) 
         {
             alert ("Trouvé !");
+            localStorage.setItem('userId',userId);
+            localStorage.setItem('userEmail',userEmail);
+            localStorage.setItem('userName',userName);
             window.location ="/Main";
         }
         else if (username > 0 && passCorrespond == 0) {

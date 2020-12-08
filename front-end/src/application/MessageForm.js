@@ -25,6 +25,9 @@ const styles = {
 
 // Composant MessageSend
 const MessageForm = ({addMessage}) => {
+
+    let userEmail = localStorage.getItem('userEmail');
+
     const onSubmit = (e) => {
         e.preventDefault()
         const data = new FormData(e.target)

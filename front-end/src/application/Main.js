@@ -25,6 +25,10 @@ const Main =  () => {
         }
     ]);
 
+    // Id et récupération des infos utilisateur:
+    let userId = localStorage.getItem('userId');
+    console.log ("MainId: "+Object.entries(userId));
+
     // Etat : channel choisi
     const  [currentChannel,setcurrentChannel] = useState ([0]);
     
@@ -35,6 +39,7 @@ const Main =  () => {
                 channels={channels}
             />
             <Channel channel={channels[currentChannel]}/> {/**On passe le channel choisi à channel */}
+            <h1>{userId.id}</h1>
         </main>
     );
 };

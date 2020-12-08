@@ -30,10 +30,10 @@ const Signup = () => {
     
     // Etats pour stocker les valeurs du formulaire
     const [email,setEmail] = useState ('');
-    const [username,setUsername] = useState(' ');
-    const [password, setPassword] = useState (' ');
+    const [username,setUsername] = useState('');
+    const [password, setPassword] = useState ('');
     
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Construire l'objet user de forme {username:'user_1,email:'email',password:'pass1'}
@@ -43,8 +43,24 @@ const Signup = () => {
             password:password
         };
 
-        // appel à l'API de création d'utilisateur
-        api.apiSignup(user);
+        /// On veut vérifier si le username ou l'email n'existent pas déjà
+        // appel à l'API renvoyant l'ensemble des utilisateurs
+        const {data} = await api.apiLogin();
+        let usernameExiste = 0; 
+
+        for (let i=0; i<data.length; ++i) {
+            if (data[i].username === username) {
+                usernameExiste ++;
+            }
+        }
+
+        if (usernameExiste == 0) {
+            // appel à l'API de création d'utilisateur
+            api.apiSignup(user);
+        } 
+        else {
+            alert ("username existe deja");
+        }
         
     } 
 
