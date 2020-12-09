@@ -1,4 +1,5 @@
-import React from'react'
+import React,{useState} from'react'
+import api from './../api'
 
 // Styles
 const styles = {
@@ -24,16 +25,36 @@ const styles = {
 };
 
 // Composant MessageSend
-const MessageForm = ({addMessage}) => {
+const MessageForm = ({addMessage,userConnected}) => {
 
-    let userEmail = localStorage.getItem('userEmail');
+    // attendre avant de render
+    //const [isLoading, setLoading] = useState(true);
+    //const [userName,setUnsername] = useState('');
+
+    /*const getUserConnectedFc = async () => {
+        // appel à l'API qui va, à partir du token, rechercher l'id de l'utilisateur connecté 
+        // et renvoyer cet utilisateur
+        const userConnected = await api.getUser();
+        console.log ("Main:YESSS");
+        setUnsername(userConnected.username);
+        setLoading(false);
+    }*/
+    
+    /*if (isLoading) {
+        getUserConnectedFc();
+        return <div className="App">Loading...</div>;
+    }*/
+
+    let userEmail = userConnected.email ;//localStorage.getItem('userEmail');
+    let userName = userConnected.username; //localStorage.getItem('userName');
+    console.log ("MessageForm: "+userName);
 
     const onSubmit = (e) => {
         e.preventDefault()
         const data = new FormData(e.target)
         addMessage({
             content: data.get('content'),
-            author: 'david',
+            author: userName,
             creation: Date.now(),
         })
         e.target.elements.content.value = ''

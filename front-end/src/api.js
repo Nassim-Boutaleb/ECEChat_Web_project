@@ -1,4 +1,9 @@
+//import { use } from '../../back-end/lib/app';
+//import privateKey from './privateKey'
+
+const privateKey = require ( './../src/privateKey');
 const axios = require('axios').default;
+const jwt = require('jsonwebtoken');
 
 const url = 'http://localhost:3001' ; 
 
@@ -39,7 +44,56 @@ const apiLogin =  () => {
     );
 };
 
+// Vérifier si un token existe dans le stockage et s'il est valide
+// Renvoie true si token existe et OK, false sinon 
+const tokenExists = () => {
+    const exist = localStorage.getItem('token') !== null;  // renvoie true si existe et false sinon
+    if (exist) {
+        // Vérifier la validité du token (durée de vie, hash, ...)
+        const token =  localStorage.getItem('token');
+        try {
+            const decToken = jwt.verify(token,privateKey);
+        } catch (e) {
+            console.log ("Erreur validation du token");
+            console.log ("Error: "+e);
+            return false; // on sera redirigé vers /login
+        }    
+    }
+    return exist ; // true si existe, false si n'existe pas
+}
+
+// Cherche le token dans le local storage
+// A partir du token, récupère l'id de l'utilisateur connecté
+// puis retourne cet utilisateur sous la forme objet {"username":"T9","email":"test@gmail.com","password":"T99","id":"ce4ea26c-5abc-4060-b98f-18c11d627eec"}
+const getUser = async () => {
+    const token =  localStorage.getItem('token');
+    const decToken = jwt.verify(token,privateKey);
+    const userId = decToken.sub;
+    console.log ("Token dec: "+JSON.stringify(decToken)+" id: "+userId);
+
+    const {data} = await axios.get (`${url}/users/${userId}`);
+    //console.log ("RRRRR: "+JSON.stringify(data));
+
+    return data;
+}
+
+const handleClickTest = async () => {
+    const token = localStorage.getItem('token');
+    const rep = await axios.get(`${url}/channels`,{
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    });
+    console.log ("APIRES: "+rep);
+    
+
+}
+
 export default {
     apiSignup,
-    apiLogin
+    apiLogin,
+    tokenExists,
+    getUser,
+    handleClickTest
+    
 };

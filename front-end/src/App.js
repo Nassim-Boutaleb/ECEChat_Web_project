@@ -11,6 +11,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import PrivateRoute from './PrivateRoute'
 
 const styles = {
   root: {
@@ -42,7 +43,7 @@ export default () => (
       <Switch>
         <Route exact path ='/' component={Login} />
         <Route exact path ='/signup' component={Signup} />
-        <Route exact path ='/Main' component={Main} />
+        <PrivateRoute exact path ='/Main' component={Main} />
       </Switch>
   </div>
 );  // fin export default

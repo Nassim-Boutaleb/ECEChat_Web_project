@@ -1,8 +1,10 @@
 
-const db = require('./db')
-const express = require('express')
-const cors = require('cors')
-const app = express()
+const privateKey = require ( './../../front-end/src/privateKey');
+const db = require('./db');
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const jwt = require('jsonwebtoken');
 
 app.use(require('body-parser').json());
 app.use(cors());
@@ -15,7 +17,36 @@ app.get('/', (req, res) => {
 
 // Channels
 
+app.use ('/channels', async (req,res,next) => {
+  console.log ("On use");
+  // Verifier token dans header
+  console.log (req.headers);
+  
+
+  // Si pas de header 
+  if (req.headers.authorization != null) {
+    const tokenHeader = req.headers.authorization.split(' ')[1];
+    console.log (tokenHeader);
+    try {
+      jwt.verify(tokenHeader,privateKey);
+    } 
+    catch(e) {
+      console.log ("Erreur middleware: "+e);
+      res.status(403).json(e);
+    }
+    finally {
+      next();
+    }
+  }
+  else {
+    const error = "Middleware: Header manquant";
+    console.log (error);
+    res.status(401).json(error);
+  }
+});
+
 app.get('/channels', async (req, res) => {
+  console.log ("On get");
   const channels = await db.channels.list()
   res.json(channels)
 });
@@ -53,8 +84,9 @@ app.post('/channels/:id/messages', async (req, res) => {
 // Ne reçoit rien en paramètres dans req
 // Retourne un tableau de la forme [ {"username":"user_1","id":"8157aa18-0ac8-45e3-ba97-ab42c2336c8b"},{...} ]
 app.get('/users', async (req, res) => {
-  const users = await db.users.list()
-  res.json(users)
+  const users = await db.users.list();
+  console.log ("mauvais back: "+JSON.stringify(user));
+  res.json(users);
 });
 
 // Ajouter un user en BDD
@@ -70,6 +102,7 @@ app.post('/users', async (req, res) => {
 // Retourne : l'utilisateur trouvé sous forme d'objet {"username":"user_1","id":"3af582ad-b589-483c-97a8-290f2712f8d3"}
 app.get('/users/:id', async (req, res) => {
   const user = await db.users.get(req.params.id);
+  console.log ("back: "+JSON.stringify(user));
   res.json(user);
 });
 

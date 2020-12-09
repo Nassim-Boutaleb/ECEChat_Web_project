@@ -9,7 +9,7 @@ const styles = {
 
 
 // Composant Channels sous forme de fonction
-const Channels =  () => {
+const Channels =  ({setChannels,channels}) => {
     return (
         <div style={styles.channels}>
                 Chennels list

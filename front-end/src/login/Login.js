@@ -1,6 +1,9 @@
 // Composant qui gère la connexion d'un utilisateur
 import React, {useState} from 'react'
 import api from './../api'
+//import privateKey from '../privateKey'
+const privateKey = require ( './../privateKey');
+const jwt = require('jsonwebtoken');
 
 
 // Styles
@@ -46,7 +49,6 @@ const Login = () => {
 
         // Afficher
         console.log ("OOO "+JSON.stringify(data)+" "+data.length);
-        console.log (data[14].username);
 
         let usernameTrouve = 0;
         let passCorrespond = 0;
@@ -61,7 +63,7 @@ const Login = () => {
                 userId = data[i].id;
                 userEmail = data[i].email;
                 userName = data[i].username;
-                console.log ("Heidi: "+userId);
+                console.log ("Heidi: "+userId+" "+userEmail+" "+userName);
                 if (data[i].password === password) {
                     passCorrespond ++;
                 }
@@ -74,6 +76,20 @@ const Login = () => {
             localStorage.setItem('userId',userId);
             localStorage.setItem('userEmail',userEmail);
             localStorage.setItem('userName',userName);
+            const prKey = privateKey;
+            console.log ("PK: "+prKey);
+            // JWT
+            var token = jwt.sign(
+                { 
+                    sub: userId,
+                    userName: userName
+                }, 
+                privateKey,
+                { expiresIn: '1h' }
+            );
+            localStorage.setItem('token',token);
+            console.log ("Token:"+token);
+
             window.location ="/Main";
         }
         else if (username > 0 && passCorrespond == 0) {

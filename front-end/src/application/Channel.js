@@ -22,7 +22,7 @@ const styles = {
 
 // Composant Channel sous forme de fonction avec 1 prop channel qui contient 1 objet channel
 // (le channel choisi). A partir de ce channel il ira chercher la liste des messages
-const Channel =  ({channel}) => {
+const Channel =  ({channel,userConnected}) => {
     
 
     // Etat messages qui contient un tableau de messages [{M1},{M2}]
@@ -116,6 +116,7 @@ const Channel =  ({channel}) => {
         // on obtient l'état messages [{M1},{M2},{NouveauM}]. Si on avait pas destructuré avec ... on aurait eu
         // messages [[{M1},{M2}],{NM}]
     };
+
     
     return (
         <div style={styles.channel}>
@@ -123,7 +124,10 @@ const Channel =  ({channel}) => {
                     messages={messages}
                     channel = {channel}
                 />
-                <MessageForm addMessage={addMessage} />
+                <MessageForm 
+                    addMessage={addMessage}
+                    userConnected = {userConnected}
+                />
         </div>
     );
 };
