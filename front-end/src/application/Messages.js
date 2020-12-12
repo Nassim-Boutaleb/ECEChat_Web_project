@@ -23,7 +23,7 @@ const styles = {
 const Messages =  ({messages,channel}) => {
     return (
         <div style={styles.messages}>
-            <h1>Messages for {channel.name}</h1>
+            <h1>Messages du channel: {channel.name}</h1>
             <ul>
                 { messages.map( (it) => (
                     <Message key={it.creation} message={it} />  // key: message.id en BDD ?

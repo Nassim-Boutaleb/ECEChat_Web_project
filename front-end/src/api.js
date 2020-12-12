@@ -88,10 +88,13 @@ const getUser = async () => {
 }*/
 
 // Creation d'un channel 
-const createChannel = async (channel) => {
+// Paramètre: objet channel {name:"channel1"}
+// et userList : [{id:"cvvs",username:"MB"}]
+// retourne: le channel créé
+const createChannel = async (channel,userList) => {
     const token = localStorage.getItem('token');
-    console.log ("APIDRONTCREECHANNEL: "+JSON.stringify(channel));
-    const {data} = await axios.post(`${url}/channels`,channel,{
+    console.log ("APIFRONTCREECHANNEL: "+JSON.stringify(channel));
+    const {data} = await axios.post(`${url}/channels`,{channel:channel,userList:userList},{
         headers : {
             'authorization' :   'Bearer ' + token
         }

@@ -11,18 +11,22 @@ const styles = {
         flexDirection: 'column',
         margin: '30px 10px 0px 10px'  // haut dte bas gche
     },
+    wrapper : {
+        overflow: 'auto',
+        width: '900px'
+    }
 };
 
 
 // Composant Channels sous forme de fonction
 // Reçoit en prop la liste des channels du user connecté et une réf sur la fonction permettant de modifier 
 // le channel courant
-const Channels =  ({setCurrentChannel,channels}) => {
+const Channels =  ({setCurrentChannel,channels,setChannels}) => {
     
     //console.log ("AffChannelsEnd??: "+JSON.stringify(channels));
     return (
-        <div>
-            <ChannelNewDialog/>
+        <div style={styles.wrapper}>
+            <ChannelNewDialog setChannels={setChannels} channels={channels}/>
             <div style={styles.channels}>
                 {
                     channels.map ( (it,index) => (

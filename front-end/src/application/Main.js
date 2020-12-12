@@ -22,11 +22,7 @@ const styles = {
 const Main =  () => {
     
     // Etat: tableau de channels du type [{name:'c1},{name:'c2},...]
-    const  [channels,setChannels] = useState ([
-        {
-            name: 'Fake channel'
-        }
-    ]);
+    const  [channels,setChannels] = useState ([]);
 
     // Id et récupération des infos utilisateur:
     //let userId = localStorage.getItem('userId');
@@ -50,14 +46,14 @@ const Main =  () => {
         //console.log ("Main:YESSS");
         //console.log ("UCONN: "+JSON.stringify(userConnected));
         setUserConnected(userConnected);
-        setLoading(false);
     }
 
     // appel à l'API qui va lister (à partir du token) l'ensemble des channels de l'utilisateur connecté
     const getChannelsOfConnectedUser = async () => {
         const {data} = await api.getChannelsOfConnectedUser();
         console.log ("Data??: "+JSON.stringify(data));
-        setChannels ([...channels,...data]);
+        setChannels ([...data]);
+        setLoading(false);
     }
     
     // tant que axios n'a pas répondu avec le user connected et chargé les channels
@@ -72,16 +68,23 @@ const Main =  () => {
         // on lui passe en propriété la liste des channels et la fonction permettant de modifier cette liste
     // Channel: la partie droite qui contient Messages et messagesForm
         // on lui passe en propriété le channel choisi par l'utilisateur et l'utilisateur connecté
+        // ce composant n'est affiché que s'il y a au moins un channel qui existe
+        // sinon erreurs car on lui passe un channel inexistant !
     return (
         <main className="App-main" style={styles.main}>
             <Channels 
                 setCurrentChannel={setCurrentChannel}
                 channels={channels}
+                setChannels={setChannels}
             />
-            <Channel 
-                channel={channels[currentChannel]}
-                userConnected = {userConnected}
-            /> {/**On passe le channel choisi à channel */}      
+            {
+                channels.length >0 ?
+                <Channel 
+                    channel={channels[currentChannel]}
+                    userConnected = {userConnected}
+                /> /**On passe le channel choisi à channel */
+                : <p> Aucun channel pour votre compte ! Créez un channel avec +</p>
+            }     
         </main>
     );
 };

@@ -56,18 +56,22 @@ app.use ('/channels', async (req,res,next) => {
 
 // Récupère les channels de l'utilisateur connecté (à partir du token récupéré)
 // Pas de paramètres
-// Reçoit du middleware d'identification res.locals.userId => id du user qui a créé le channel
+// Reçoit du middleware d'identification res.locals.userId => id du user connecté
 // Retourne un tableau de channels contenant uniquement les channel auxquels l'utilisateur connecté est abonné
 app.get('/channels', async (req, res) => {
   console.log ("On get");
-  const userId = res.locals.userId; // id de l'utilisateur qui a créé le channel
+  const userId = res.locals.userId; // id de l'utilisateur connecté dont on veut lister les channels
   
-  const channels = await db.channels.list();
+  const channels = await db.channels.list(); // récupérer tous les channels de l'appli
   const channelsOfUser = [];  // on mettra les channels de l'utilisateur connecté ici
-  console.log ("back channels: "+JSON.stringify(channels));
-  // Channels est un tableau de channel du type [{"name":"channel1","idUsers":['x54r','ppo6']}]
+  //console.log ("back channels: "+JSON.stringify(channels));
+
+
+  // Channels est un tableau de channel du type [{name:"channel1",idUsers:['x54r','ppo6'],creatorID:xgsg,id:pxo}]
   // On parcourt le tableau de channels puis le sous-tableau des users du channel
   // Si l'id de notre user est trouvé ds la liste des users du channel: on garde le channel 
+  // de même si l'id de notre user est trouvé comme étant le créateur du channel
+
   for (var i=0; i< channels.length; ++i) {
       for (j=0; j<channels[i].idUsers.length; j++) {
           //console.log ("jaja: "+channels[i].idUsers[j]+" i= "+i);
@@ -76,6 +80,9 @@ app.get('/channels', async (req, res) => {
               channelsOfUser.push (channels[i]);
           }
       }
+      if (channels[i].creatorId === userId){
+          channelsOfUser.push (channels[i]);
+      } // si on a pas trouvé notre user dans la liste des users du channel, il est peut être le créateur ?
   }
 
   res.json(channelsOfUser);
@@ -97,7 +104,8 @@ app.get('/allChannels', async (req, res) => {
 app.post('/channels', async (req, res) => {
   const userId = res.locals.userId; // id de l'utilisateur qui a créé le channel
   console.log ("CreationchannelBACK: "+userId);
-  console.log ("CreationchannelBACK-CHANNEL: "+JSON.stringify(req.body));
+  console.log ("\nCreationchannelBACK-CHANNEL: "+JSON.stringify(req.body.channel));
+  console.log ("\nCreationchannelBACK-USERLIST: "+JSON.stringify(req.body.userList));
   const channel = await db.channels.create(req.body,userId);
   res.status(201).json(channel);
 });

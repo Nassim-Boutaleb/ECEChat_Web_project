@@ -12,11 +12,14 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import api from './../api'
 
-const ChannelNewDialog = () => {
+const ChannelNewDialog = ({setChannels,channels}) => {
   const [open, setOpen] = React.useState(false);  // Gestion boite dialogue
   const [channelName,setChannelName] = useState('');  // stocker le nom du channel saisi
-  const [userList,setUserList] = useState([]);  // Liste des ID des utilisateurs du channel
+  const [userList,setUserList] = useState([]);  // Liste des ID et username des utilisateurs du channel
   const [userName,setUserName] = useState('');  // nom du user à ajouter à la liste des user
+
+  // gestion erreurs
+  const [errorUser,setErrorUser] = useState(false);
   
   const handleChange = (e) => {
       const champModifie = e.target.name
@@ -35,21 +38,29 @@ const ChannelNewDialog = () => {
   const handleSubmit = async () => {
       const channel = {name:channelName};
       console.log ("ChannelsAvCrea: "+JSON.stringify(channel));
-      const data = await api.createChannel(channel);
-      console.log ("ChannelApresCrea: "+data);
+      const data = await api.createChannel(channel,userList);
+      console.log ("ChannelApresCrea: "+JSON.stringify(data));
+      
+      // Ajouter le channel à la liste des channels stockée dans Main
+      
       setOpen(false); // fermer boite de dialogue
+      setChannels([...channels,data]);
+      console.log ("ChannelasStateApres: ///: "+channels);
   }
 
   // Ajouter le user à la liste des users à ajouter au channel, après avoir vérifié son existance
   const handleAddUser = async () => {
       const data = await api.userExists(userName); // data contient soit l'ID du user retouvé, soit -1
       if (data === -1) {
-        alert ("pas trouvé");
+        //alert ("pas trouvé");
+        setErrorUser(true);
       }
       else {
-        alert ("Trouvé id= "+data);
+        //alert ("Trouvé id= "+data);
         setUserList([...userList,{id:data,username:userName}]);
+        setErrorUser(false);
       }
+      console.log ("CGD: "+typeof setChannels === 'function');
   }
 
   // supprimer l'utilisateur de la liste des utilisateurs à ajouter à partir de son index
@@ -99,6 +110,8 @@ const ChannelNewDialog = () => {
             value={channelName}
             onChange = {handleChange}
             fullWidth
+            error={channelName === ''}
+            helperText={channelName === ''?'Veuillez saisir un nom pour le channel': ''}
           />
 
           <TextField
@@ -110,7 +123,10 @@ const ChannelNewDialog = () => {
             value={userName}
             onChange = {handleChange}
             fullWidth
+            error={errorUser}
+            helperText={errorUser?'Cet utilisateur n\'existe pas': ''}
           />
+
           <Button variant="contained" onClick={handleAddUser} color="secondary">
             Ajouter utilisateur au channel
           </Button>

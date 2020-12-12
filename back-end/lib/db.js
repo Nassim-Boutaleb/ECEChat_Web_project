@@ -9,22 +9,28 @@ module.exports = {
   channels: {
     
     //Creation d'un channel en BDD
-    // Recoit en paramètre le contenu du channel sous forme d'objet
-    // et l'id de l'utilisateur qui a créé le channel
-    create: async (channel,idUser) => {
+    // Recoit en paramètre le contenu du channel sous forme d'objet {name:"channel1"}
+    // et l'id de l'utilisateur qui a créé le channel (une string)
+    // et userList la liste des utilisateurs {id:"tere",username:"MB"}
+    create: async ({channel,userList},idUser) => {
       if(!channel.name) throw Error('Invalid channel');
       if(!idUser) throw Error ('No id provided');
 
       const id = uuid(); // définir un id pour le channel
 
       const idUsers = []; 
-      idUsers.push(idUser);
+      // ajouter les ID contenus dans userList à idUsers 
+      for (let i=0; i<userList.length; ++i) {
+        idUsers.push (userList[i].id);
+      }
+      //idUsers.push(idUser);  // finalement le créateur sera en creator (super admin)
+      console.log ("BDD:Idusers: "+idUsers);
 
-      const channelP = merge (channel,{idUsers: idUsers});
+      const channelP = merge (channel,{idUsers: idUsers,creatorId: idUser});
       console.log (channelP);
 
       await db.put(`channels:${id}`, JSON.stringify(channelP))
-      return merge(channel, {id: id})
+      return merge(channelP, {id: id})
     },
 
     get: async (id) => {
