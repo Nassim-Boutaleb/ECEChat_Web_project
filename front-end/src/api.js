@@ -120,6 +120,28 @@ const getChannelsOfConnectedUser = async () => {
     }));
 }
 
+// Vérifie si un user correspondant au userName passé en paramètre existe ou pas
+// Retourne le user s'il a été trouvé, retourne -1 sinon
+const userExists = async (userName) => {
+    const {data} = await axios.get (`${url}/users`);  // récupérer liste des users
+    // Vérifier si le user existe
+    let trouve = 0;
+    let userId;
+    for (let i=0; i<data.length; ++i) {
+        if (data[i].username === userName) {
+            userId = data[i].id;
+            trouve ++;
+        }
+    }
+
+    if (trouve > 0) {
+        return userId;
+    }
+    else {
+        return -1;
+    }
+}
+
 export default {
     apiSignup,
     apiLogin,
@@ -127,6 +149,7 @@ export default {
     getUser,
     createChannel,
     getAllChannelsTest,
-    getChannelsOfConnectedUser
+    getChannelsOfConnectedUser,
+    userExists
     
 };

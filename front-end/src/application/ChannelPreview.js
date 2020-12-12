@@ -18,7 +18,7 @@ const ChannelPreview = ({index,setCurrentChannel,name}) => {
     }
     
     return (
-        <Button variant="outlined" onClick={handleChange} style={styles.btn}>
+        <Button variant="contained" onClick={handleChange} style={styles.btn}>
             {name}
         </Button>
     );
