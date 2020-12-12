@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import ChatGravatar from './Gravatar';
 
 const styles = {
     message: {
@@ -91,6 +92,7 @@ const Message = ({message}) => {
         <li style={styles.message}>
             <p>
                 <span>{message.author}</span>
+                <img src={ChatGravatar()}  width='30px'/> 
                 {' '}
                 <span>{date}</span>
             </p>

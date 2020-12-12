@@ -7,18 +7,33 @@ const db = level(__dirname + '/../db')
 
 module.exports = {
   channels: {
-    create: async (channel) => {
-      if(!channel.name) throw Error('Invalid channel')
-      const id = uuid()
-      await db.put(`channels:${id}`, JSON.stringify(channel))
+    
+    //Creation d'un channel en BDD
+    // Recoit en paramètre le contenu du channel sous forme d'objet
+    // et l'id de l'utilisateur qui a créé le channel
+    create: async (channel,idUser) => {
+      if(!channel.name) throw Error('Invalid channel');
+      if(!idUser) throw Error ('No id provided');
+
+      const id = uuid(); // définir un id pour le channel
+
+      const idUsers = []; 
+      idUsers.push(idUser);
+
+      const channelP = merge (channel,{idUsers: idUsers});
+      console.log (channelP);
+
+      await db.put(`channels:${id}`, JSON.stringify(channelP))
       return merge(channel, {id: id})
     },
+
     get: async (id) => {
       if(!id) throw Error('Invalid id')
       const data = await db.get(`channels:${id}`)
       const channel = JSON.parse(data)
       return merge(channel, {id: id})
     },
+
     list: async () => {
       return new Promise( (resolve, reject) => {
         const channels = []
@@ -36,32 +51,43 @@ module.exports = {
         })
       })
     },
+
     update: (id, channel) => {
       const original = store.channels[id]
       if(!original) throw Error('Unregistered channel id')
       store.channels[id] = merge(original, channel)
     },
+
     delete: (id, channel) => {
       const original = store.channels[id]
       if(!original) throw Error('Unregistered channel id')
       delete store.channels[id]
     }
   },
+
+
   messages: {
+    
+    // Crée un message à partir du channel id passé en paramètre
+    // Paramètres: channelID id du channel (string)
+    // et message objet de forme {author:"david","content":"bonjour"}
     create: async (channelId, message) => {
       if(!channelId) throw Error('Invalid channel')
       if(!message.author) throw Error('Invalid message')
       if(!message.content) throw Error('Invalid message')
-      creation = microtime.now()
+      creation = microtime.now() // date de création du message (instant actuel)
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
         content: message.content
       }))
       return merge(message, {channelId: channelId, creation: creation})
     },
+
+    // Renvoie un tableau de messages à partir de l'id du channel passé en paramètre
     list: async (channelId) => {
       return new Promise( (resolve, reject) => {
-        const messages = []
+        const messages = []; // la liste des messages
+
         db.createReadStream({
           gt: `messages:${channelId}:`,
           lte: `messages:${channelId}` + String.fromCharCode(":".charCodeAt(0) + 1),
@@ -79,6 +105,8 @@ module.exports = {
       })
     },
   },
+
+
   users: {
 
     // Ajoute un user en BDD
@@ -125,11 +153,16 @@ module.exports = {
       });
     },
 
-    // TODO
-    update: (id, user) => {
-      const original = store.users[id]
-      if(!original) throw Error('Unregistered user id')
-      store.users[id] = merge(original, user)
+    // Met à jour les données d'un utilisateur à partir de son ID
+    // En paramètre: l'id de l'utilisateur et le nouvel objet utilisateur
+    update: async (id, user) => {
+      if(!user.username) throw Error('Invalid user');
+      if(!id) throw Error ('No id provided');
+  
+      //console.log ("BD: "+`users:${id}`, JSON.stringify(user));
+      await db.put(`users:${id}`, JSON.stringify(user))
+      //console.log ("DBR: "+JSON.stringify(merge(user, {id: id} ))); //dbg
+      return merge(user, {id: id})
     },
 
     // TODO

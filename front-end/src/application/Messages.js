@@ -25,8 +25,8 @@ const Messages =  ({messages,channel}) => {
         <div style={styles.messages}>
             <h1>Messages for {channel.name}</h1>
             <ul>
-                { messages.map( (message) => (
-                    <Message key={message.creation} message={message} />  // key: message.id en BDD ?
+                { messages.map( (it) => (
+                    <Message key={it.creation} message={it} />  // key: message.id en BDD ?
                 ))}
             </ul>
         </div>

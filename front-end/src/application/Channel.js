@@ -118,6 +118,11 @@ const Channel =  ({channel,userConnected}) => {
     };
 
     
+    // Messages = la liste des messages déjà écrits dans le channel
+        // En propriété messages = tableau de messages et channel = le channel en cours
+    // MessageForm= champ de saisie du message
+        // En props addMessage la fonction pour ajouter le nouveau message à la liste des messages
+        // userConnected le user connecté
     return (
         <div style={styles.channel}>
                 <Messages

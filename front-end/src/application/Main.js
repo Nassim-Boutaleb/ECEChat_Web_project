@@ -21,7 +21,7 @@ const styles = {
 // Composant Main sous forme de fonction 
 const Main =  () => {
     
-    // Etat: tableau de channels
+    // Etat: tableau de channels du type [{name:'c1},{name:'c2},...]
     const  [channels,setChannels] = useState ([
         {
             name: 'Fake channel'
@@ -35,46 +35,53 @@ const Main =  () => {
     //console.log ("MainId: "+userId+" "+userEmail+" "+userName);
     
 
-    // Etat : channel choisi
-    const  [currentChannel,setcurrentChannel] = useState ([0]);
+    // Etat : channel choisi (index dans le tableau des channels) par défaut channel 0
+    const  [currentChannel,setCurrentChannel] = useState (0);   // useState([0]) par Worms ?!
+    
     // attendre avant de render
     const [isLoading, setLoading] = useState(true);
-    // stocker en état l'utilisateur connecté récupéré grâce à l'api
+    // stocker en état l'utilisateur connecté récupéré grâce à l'api {'username':'xxx',...}
     const [userConnected,setUserConnected] = useState('');
 
+    // appel à l'API qui va, à partir du token, rechercher l'id de l'utilisateur connecté 
+    // et renvoyer cet utilisateur
     const getUserConnectedFc = async () => {
-        // appel à l'API qui va, à partir du token, rechercher l'id de l'utilisateur connecté 
-        // et renvoyer cet utilisateur
         const userConnected = await api.getUser();
         //console.log ("Main:YESSS");
         //console.log ("UCONN: "+JSON.stringify(userConnected));
         setUserConnected(userConnected);
         setLoading(false);
     }
+
+    // appel à l'API qui va lister (à partir du token) l'ensemble des channels de l'utilisateur connecté
+    const getChannelsOfConnectedUser = async () => {
+        const {data} = await api.getChannelsOfConnectedUser();
+        console.log ("Data??: "+JSON.stringify(data));
+        setChannels ([...channels,...data]);
+    }
     
-    // tant que axios n'a pas répondu avec le user connected
+    // tant que axios n'a pas répondu avec le user connected et chargé les channels
     if (isLoading) {
         getUserConnectedFc();
+        getChannelsOfConnectedUser();
         return <div className="App">Loading...</div>;
     }
     
-    const handleClickTest = (e) => {
-        api.handleClickTest();
-    }
 
+    // Channels: composant qui contient la liste des channels
+        // on lui passe en propriété la liste des channels et la fonction permettant de modifier cette liste
+    // Channel: la partie droite qui contient Messages et messagesForm
+        // on lui passe en propriété le channel choisi par l'utilisateur et l'utilisateur connecté
     return (
         <main className="App-main" style={styles.main}>
             <Channels 
-                setChannels={setChannels}
+                setCurrentChannel={setCurrentChannel}
                 channels={channels}
             />
             <Channel 
                 channel={channels[currentChannel]}
                 userConnected = {userConnected}
-            /> {/**On passe le channel choisi à channel */}
-
-            <button value="TEST" onClick={handleClickTest}>TEST </button>
-            
+            /> {/**On passe le channel choisi à channel */}      
         </main>
     );
 };

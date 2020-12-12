@@ -77,7 +77,7 @@ const getUser = async () => {
     return data;
 }
 
-const handleClickTest = async () => {
+/*const handleClickTest = async () => {
     const token = localStorage.getItem('token');
     const rep = await axios.get(`${url}/channels`,{
         headers : {
@@ -85,8 +85,39 @@ const handleClickTest = async () => {
         }
     });
     console.log ("APIRES: "+rep);
-    
+}*/
 
+// Creation d'un channel 
+const createChannel = async (channel) => {
+    const token = localStorage.getItem('token');
+    console.log ("APIDRONTCREECHANNEL: "+JSON.stringify(channel));
+    const {data} = await axios.post(`${url}/channels`,channel,{
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    });
+    return data;
+}
+
+const getAllChannelsTest = async () => {
+    const token = localStorage.getItem('token');
+    return (axios.get(`${url}/allChannels`,{
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    }));
+}
+
+// Renvoie (à partir du token) la liste des channels de l'utilisateur connecté
+// Retourne un tableau de channel contenant les channels auxquels le user connecté est abonné
+const getChannelsOfConnectedUser = async () => {
+    const token = localStorage.getItem('token');
+    
+    return (axios.get(`${url}/Channels`,{
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    }));
 }
 
 export default {
@@ -94,6 +125,8 @@ export default {
     apiLogin,
     tokenExists,
     getUser,
-    handleClickTest
+    createChannel,
+    getAllChannelsTest,
+    getChannelsOfConnectedUser
     
 };

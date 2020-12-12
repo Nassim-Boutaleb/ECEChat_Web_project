@@ -27,6 +27,10 @@ const styles = {
           color: '#fff',
         },
     },
+    body: {
+        backgroundColor: 'red'
+    }
+    
 };
 
 // Composant Login
@@ -41,7 +45,6 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        
         // appel à l'API de récupération des utilisateurs et de vérification du login
         // {data} permet de ne récupérer que les données du get (sinon axios renvoie d'autres données )
         // axios est asynchrone, il faut attendre
@@ -111,8 +114,8 @@ const Login = () => {
         <form style={styles.form}  onSubmit={handleSubmit}>
             Username <input type="text" name="username" style={styles.content} value={username} onChange={handleChange} />
             Password <input type="text" name="password" style={styles.content} value={password} onChange={handleChange} />
-            <input type="submit" value="Inscription" style={styles.send} />
-        </form>
+            <input type="submit" value="Se connecter" style={styles.send} />
+        </form> 
     )
 };
 

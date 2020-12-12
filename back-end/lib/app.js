@@ -17,27 +17,36 @@ app.get('/', (req, res) => {
 
 // Channels
 
+// Middleware systématiquement appelé avant toute autre requête vers channels
+// vérifie la validité du token d'identification passé via le header authorization
 app.use ('/channels', async (req,res,next) => {
   console.log ("On use");
   // Verifier token dans header
   console.log (req.headers);
   
 
-  // Si pas de header 
+  // Si il y a un header 
   if (req.headers.authorization != null) {
     const tokenHeader = req.headers.authorization.split(' ')[1];
     console.log (tokenHeader);
+    let decodedToken ;
     try {
-      jwt.verify(tokenHeader,privateKey);
+      decodedToken = jwt.verify(tokenHeader,privateKey);
     } 
     catch(e) {
       console.log ("Erreur middleware: "+e);
       res.status(403).json(e);
     }
     finally {
+      // Variables qui seront passées au middleware suivants
+      res.locals.userId = decodedToken.sub;
+      console.log ("MCDT: "+res.locals.userId)
+      
+      // passer au middleware/requête suivant
       next();
     }
   }
+  // Si pas de header
   else {
     const error = "Middleware: Header manquant";
     console.log (error);
@@ -45,38 +54,87 @@ app.use ('/channels', async (req,res,next) => {
   }
 });
 
+// Récupère les channels de l'utilisateur connecté (à partir du token récupéré)
+// Pas de paramètres
+// Reçoit du middleware d'identification res.locals.userId => id du user qui a créé le channel
+// Retourne un tableau de channels contenant uniquement les channel auxquels l'utilisateur connecté est abonné
 app.get('/channels', async (req, res) => {
   console.log ("On get");
+  const userId = res.locals.userId; // id de l'utilisateur qui a créé le channel
+  
+  const channels = await db.channels.list();
+  const channelsOfUser = [];  // on mettra les channels de l'utilisateur connecté ici
+  console.log ("back channels: "+JSON.stringify(channels));
+  // Channels est un tableau de channel du type [{"name":"channel1","idUsers":['x54r','ppo6']}]
+  // On parcourt le tableau de channels puis le sous-tableau des users du channel
+  // Si l'id de notre user est trouvé ds la liste des users du channel: on garde le channel 
+  for (var i=0; i< channels.length; ++i) {
+      for (j=0; j<channels[i].idUsers.length; j++) {
+          //console.log ("jaja: "+channels[i].idUsers[j]+" i= "+i);
+          if (channels[i].idUsers[j] === userId) {
+              //console.log ("On push");
+              channelsOfUser.push (channels[i]);
+          }
+      }
+  }
+
+  res.json(channelsOfUser);
+});
+
+// TEST
+// Retourne tous les channels de l'app
+app.get('/allChannels', async (req, res) => {
+  console.log ("Get all channels");
   const channels = await db.channels.list()
   res.json(channels)
 });
 
+
+// Crée un channel en base de données 
+// En paramètre: l'objet channel de type {name:"channel 1"}
+// Reçoit du middleware d'identification res.locals.userId => id du user qui a créé le channel
+// retourne le channel créé
 app.post('/channels', async (req, res) => {
-  const channel = await db.channels.create(req.body)
-  res.status(201).json(channel)
+  const userId = res.locals.userId; // id de l'utilisateur qui a créé le channel
+  console.log ("CreationchannelBACK: "+userId);
+  console.log ("CreationchannelBACK-CHANNEL: "+JSON.stringify(req.body));
+  const channel = await db.channels.create(req.body,userId);
+  res.status(201).json(channel);
 });
 
+// Renvoie un channel à partir de son id
+// en paramètre : l'id du channel à retrouver
+// Revoie: un channel sous la forme {name:"XYZ"}
 app.get('/channels/:id', async (req, res) => {
-  const channel = await db.channels.get(req.params.id)
-  res.json(channel)
+  const channel = await db.channels.get(req.params.id);
+  res.json(channel);
 });
 
+// Met a jour le channel désigné par son id
+// En paramètres: l'id du channel à mettre à jour et le contenu du nouveau channel sous forme d'objet
+// Renvoie le channel mis à jour
+// TODO
 app.put('/channels/:id', async (req, res) => {
-  const channel = await db.channels.update(req.body)
-  res.json(channel)
+  const channel = await db.channels.update(req.params.id,req.body);
+  res.json(channel);
 });
+
+//______________________________________________________________
 
 // Messages
-
+// Renvoie les messages d'un channel à partir de l'id du channel
 app.get('/channels/:id/messages', async (req, res) => {
   const messages = await db.messages.list(req.params.id)
   res.json(messages)
 });
 
+// Ajoute un message au channel désigné par son id
 app.post('/channels/:id/messages', async (req, res) => {
   const message = await db.messages.create(req.params.id, req.body)
   res.status(201).json(message)
 });
+
+//____________________________________________________________________
 
 // Users
 
@@ -85,7 +143,7 @@ app.post('/channels/:id/messages', async (req, res) => {
 // Retourne un tableau de la forme [ {"username":"user_1","id":"8157aa18-0ac8-45e3-ba97-ab42c2336c8b"},{...} ]
 app.get('/users', async (req, res) => {
   const users = await db.users.list();
-  console.log ("mauvais back: "+JSON.stringify(user));
+  console.log ("mauvais back: "+JSON.stringify(users));
   res.json(users);
 });
 
@@ -106,9 +164,11 @@ app.get('/users/:id', async (req, res) => {
   res.json(user);
 });
 
-// TODO
+// Met a jour les données d'un utilisateur à partir de son id
+// En paramètre : l'id de l'utilisateur à mettre à jour et le nouvel objet utilisateur de type {"username":"user_1","id":"3af582ad-b589-483c-97a8-290f2712f8d3",...}
+// Renvoie : l'utilisateur mis à jour
 app.put('/users/:id', async (req, res) => {
-  const user = await db.users.update(req.body)
+  const user = await db.users.update(req.params.id,req.body)
   res.json(user)
 });
 

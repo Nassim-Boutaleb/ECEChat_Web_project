@@ -1,5 +1,6 @@
-import React,{useState} from'react'
-import api from './../api'
+import React,{useState} from'react';
+import api from './../api';
+import ChatGravatar from './Gravatar';
 
 // Styles
 const styles = {
@@ -61,6 +62,7 @@ const MessageForm = ({addMessage,userConnected}) => {
     } 
     return (
         <form style={styles.form}  onSubmit={onSubmit}>
+            <img src={ChatGravatar()} /> 
             <input type="input" name="content" style={styles.content} />
             <input type="submit" value="Send" style={styles.send} />
         </form>

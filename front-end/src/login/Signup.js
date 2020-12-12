@@ -57,6 +57,8 @@ const Signup = () => {
         if (usernameExiste == 0) {
             // appel à l'API de création d'utilisateur
             api.apiSignup(user);
+            console.log ('Vous etes inscrit');
+            window.location ="/";
         } 
         else {
             alert ("username existe deja");
@@ -72,13 +74,21 @@ const Signup = () => {
         else if (champModifie === 'password') setPassword(newValue);
     }
 
+    const testGetAllChannels = async () => {
+        const {data} = await api.getAllChannelsTest();
+        console.log ("ALLCHANNELS:///: "+JSON.stringify(data));
+    }
+
     return (
+        <div>
         <form style={styles.form}  onSubmit={handleSubmit}>
             Email <input type="text" name="email" style={styles.content} value={email} onChange={handleChange} />
             Username <input type="text" name="username" style={styles.content} value={username} onChange={handleChange} />
             Password <input type="text" name="password" style={styles.content} value={password} onChange={handleChange} />
             <input type="submit" value="Inscription" style={styles.send} />
         </form>
+        <button onClick={testGetAllChannels} >Get all Channels (TEST)</button>
+        </div>
     )
 };
 
