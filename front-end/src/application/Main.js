@@ -13,6 +13,9 @@ const styles = {
         display: 'flex',
         flexDirection: 'row',
         overflow: 'hidden',
+        //border: "2px red solid",
+        padding: '30px',
+        //height: '500px'
     },
 };
 

@@ -13,7 +13,7 @@ const styles = {
     },
     wrapper : {
         overflow: 'auto',
-        width: '900px'
+        width: '900px',
     }
 };
 
@@ -30,7 +30,6 @@ const Channels =  ({setCurrentChannel,channels,setChannels}) => {
             <div style={styles.channels}>
                 {
                     channels.map ( (it,index) => (
-                        //<li key={it.id}>{it.name}</li>
                         <ChannelPreview
                             key={it.id}
                             index={index}

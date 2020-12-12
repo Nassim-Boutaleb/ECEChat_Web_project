@@ -3,7 +3,8 @@ import Button from '@material-ui/core/Button';
 
 const styles = {
     btn: {
-        width: '200px'
+        width: '200px',
+        margin: '5px'
     },
 };
 
