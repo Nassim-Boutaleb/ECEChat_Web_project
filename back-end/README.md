@@ -13,7 +13,6 @@ Chat is waiting for you at http://localhost:3001
 ```
 
 Run the tests with mocha:
-
 ```bash
 npm run test
 ```
@@ -21,3 +20,4 @@ npm run test
 ## Instructions
 
 See "../lab.md" for the lab instructions.
+
