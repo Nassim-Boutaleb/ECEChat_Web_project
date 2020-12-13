@@ -8,7 +8,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 const styles = {
     root: {
-      flexGrow: 1,
+      //flexGrow: 1,
+      //backgroundColor: '#373B44',
     },
     menuButton: {
       marginRight: '30px',
@@ -21,16 +22,16 @@ const styles = {
     }
   };
 
-const Navbar = () => {
+const Navbar = ({handleDrawerOpen}) => {
     return (
         <div style={styles.root}>
           <AppBar position="static" style={styles.navbar}>
             <Toolbar>
-              <IconButton edge="start"  color="inherit" aria-label="menu" style={styles.menuButton}>
+              <IconButton edge="start"  color="inherit" aria-label="menu" style={styles.menuButton} onClick={handleDrawerOpen}>
                 <MenuIcon />
               </IconButton>
               <span style={styles.title}> </span>
-              <Button color="inherit" style={styles.login}>Login</Button>
+              <Button color="inherit" style={styles.login}>Gerer mon compte (non fonctionnel)</Button>
             </Toolbar>
           </AppBar>
         </div>

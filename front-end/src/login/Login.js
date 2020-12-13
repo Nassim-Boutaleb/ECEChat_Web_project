@@ -1,6 +1,11 @@
 // Composant qui gère la connexion d'un utilisateur
 import React, {useState} from 'react'
 import api from './../api'
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 //import privateKey from '../privateKey'
 const privateKey = require ( './../privateKey');
 const jwt = require('jsonwebtoken');
@@ -9,26 +14,31 @@ const jwt = require('jsonwebtoken');
 // Styles
 const styles = {
     form: {
-        borderTop: '2px solid #373B44',
+        //borderTop: '2px solid #373B44',
         padding: '.5rem',
+        //display: 'flex',
+        //justifyContent:'center',
+        //alignItems:'center'
+    },
+    card: {
+        backgroundColor: '#9096A3',
+        display:'flex',
+        flexDirection: 'column',
+        width: '600px'
+    },
+    cardContent : {
+        display:'flex',
+        flexDirection: 'column'
+    },
+    root: {
+        height: '100%',
         display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#373B44'
     },
-    content: {
-        flex: '1 1 auto',
-        marginRight: '.5rem'
-    },
-    send: {
-        backgroundColor: '#D6DDEC',
-        padding: '.2rem .5rem',
-        border: 'none',
-        ':hover': {
-          backgroundColor: '#2A4B99',
-          cursor: 'pointer',
-          color: '#fff',
-        },
-    },
-    body: {
-        backgroundColor: 'red'
+    textFields : {
+        margin: '20px'
     }
     
 };
@@ -39,6 +49,10 @@ const Login = () => {
     // Etats pour stocker les valeurs du formulaire
     const [username,setUsername] = useState('');
     const [password, setPassword] = useState ('');
+
+    // Erreur formulaire
+    const [errorUsername, setErrorUsername] = useState(false);
+    const [errorPassword, setErrorPassword] = useState(false);
     
     // A l'envoi du formualire : appel à l'API pour récupérer la liste de tous les utilisateurs
     // et vérifier si login et mdp OK
@@ -75,7 +89,7 @@ const Login = () => {
 
         if (usernameTrouve > 0 && passCorrespond > 0) 
         {
-            alert ("Trouvé !");
+            //alert ("Trouvé !");
             localStorage.setItem('userId',userId);
             localStorage.setItem('userEmail',userEmail);
             localStorage.setItem('userName',userName);
@@ -95,11 +109,15 @@ const Login = () => {
 
             window.location ="/Main";
         }
-        else if (username > 0 && passCorrespond == 0) {
-            alert ("Mauvais mot de passe");
+        else if (usernameTrouve > 0 && passCorrespond == 0) {
+            setErrorPassword(true);
+            setErrorUsername(false);
+            //alert ("Mauvais mot de passe");
         }
         else {
-            alert ("pas trouvé");
+            setErrorUsername(true);
+            setErrorPassword(false);
+            //alert ("pas trouvé");
         }
     } 
 
@@ -111,11 +129,40 @@ const Login = () => {
     }
 
     return (
-        <form style={styles.form}  onSubmit={handleSubmit}>
-            Username <input type="text" name="username" style={styles.content} value={username} onChange={handleChange} />
-            Password <input type="text" name="password" style={styles.content} value={password} onChange={handleChange} />
-            <input type="submit" value="Se connecter" style={styles.send} />
-        </form> 
+        <div style={styles.root}>
+        
+            <Card style={styles.card}>
+                <CardContent style={styles.cardContent}>
+                    <TextField style={styles.textFields}
+                        id="username"
+                        name="username"
+                        label="username"
+                        type="text"
+                        value={username} 
+                        onChange={handleChange}
+                        error={errorUsername}
+                        helperText={errorUsername?'Cet utilisateur n\'existe pas': ''}
+                        autoFocus
+                    />
+                    <TextField style={styles.textFields}
+                        id="password"
+                        name="password"
+                        label="mot de passe"
+                        type="password"
+                        value={password} 
+                        onChange={handleChange}
+                        error={errorPassword}
+                        helperText={errorPassword?'Mot de passe incorrect': ''}
+                    />
+                </CardContent>
+                <CardActions style={styles.cardContent}>
+                    <Button variant="outlined" onClick={handleSubmit} color="primary">Se connecter</Button>
+                    <p style={{color:'white'}}>Pas de compte ? </p>
+                    <Button variant="outlined" onClick={()=>{window.location='/signup'}} color="secondary">Créer un compte</Button>
+                </CardActions>
+            </Card>
+        
+        </div>
     )
 };
 

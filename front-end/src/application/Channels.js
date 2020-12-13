@@ -13,7 +13,8 @@ const styles = {
     },
     wrapper : {
         overflow: 'auto',
-        width: '900px',
+        backgroundColor: '#373B44',
+        height: '100%'
     }
 };
 

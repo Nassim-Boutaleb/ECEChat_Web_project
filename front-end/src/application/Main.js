@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Channels from './Channels'
 import Channel from './Channel'
 import api from './../api'
-
+import Drawer from '@material-ui/core/Drawer';
 
 
 // définition du style
@@ -22,7 +22,8 @@ const styles = {
 
 
 // Composant Main sous forme de fonction 
-const Main =  () => {
+// Props: open = détermine si le menu channels doit être open ou pas
+const Main =  ({open,handleDrawerClose}) => {
     
     // Etat: tableau de channels du type [{name:'c1},{name:'c2},...]
     const  [channels,setChannels] = useState ([]);
@@ -75,18 +76,24 @@ const Main =  () => {
         // sinon erreurs car on lui passe un channel inexistant !
     return (
         <main className="App-main" style={styles.main}>
-            <Channels 
-                setCurrentChannel={setCurrentChannel}
-                channels={channels}
-                setChannels={setChannels}
-            />
+            <Drawer
+                anchor="left"
+                open={open}
+                onClose={handleDrawerClose}
+            >
+                <Channels 
+                    setCurrentChannel={setCurrentChannel}
+                    channels={channels}
+                    setChannels={setChannels}
+                />
+            </Drawer>
             {
                 channels.length >0 ?
                 <Channel 
                     channel={channels[currentChannel]}
                     userConnected = {userConnected}
                 /> /**On passe le channel choisi à channel */
-                : <p> Aucun channel pour votre compte ! Créez un channel avec +</p>
+                : <div> Aucun channel pour votre compte ! Créez un channel avec +</div>
             }     
         </main>
     );
