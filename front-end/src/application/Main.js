@@ -43,6 +43,9 @@ const Main =  ({open,handleDrawerClose}) => {
     // stocker en état l'utilisateur connecté récupéré grâce à l'api {'username':'xxx',...}
     const [userConnected,setUserConnected] = useState('');
 
+    // Gestion du loading du composant channel
+    const [channelIsLoading, setChannelLoading] = useState(true);
+
     // appel à l'API qui va, à partir du token, rechercher l'id de l'utilisateur connecté 
     // et renvoyer cet utilisateur
     const getUserConnectedFc = async () => {
@@ -66,6 +69,8 @@ const Main =  ({open,handleDrawerClose}) => {
         getChannelsOfConnectedUser();
         return <div className="App">Loading...</div>;
     }
+
+    
     
 
     // Channels: composant qui contient la liste des channels
@@ -85,6 +90,7 @@ const Main =  ({open,handleDrawerClose}) => {
                     setCurrentChannel={setCurrentChannel}
                     channels={channels}
                     setChannels={setChannels}
+                    setChannelLoading = {setChannelLoading}
                 />
             </Drawer>
             {
@@ -92,6 +98,8 @@ const Main =  ({open,handleDrawerClose}) => {
                 <Channel 
                     channel={channels[currentChannel]}
                     userConnected = {userConnected}
+                    isLoading = {channelIsLoading}
+                    setLoading = {setChannelLoading}
                 /> /**On passe le channel choisi à channel */
                 : <div> Aucun channel pour votre compte ! Créez un channel avec +</div>
             }     

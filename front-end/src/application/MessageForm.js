@@ -11,7 +11,8 @@ const styles = {
     },
     content: {
         flex: '1 1 auto',
-        marginRight: '.5rem'
+        marginRight: '.5rem',
+        color: 'black'
     },
     send: {
         backgroundColor: '#D6DDEC',
@@ -26,7 +27,7 @@ const styles = {
 };
 
 // Composant MessageSend
-const MessageForm = ({addMessage,userConnected}) => {
+const MessageForm = ({addMessage,userConnected,currentChannel}) => {
 
     // attendre avant de render
     //const [isLoading, setLoading] = useState(true);
@@ -61,17 +62,17 @@ const MessageForm = ({addMessage,userConnected}) => {
         };
 
         // Ajout du message en BDD
-        //const mbdd = await api.addMessageDB(newMessage);
+        const mbdd = await api.addMessageDB(newMessage,currentChannel.id);
 
         // Ajout du message dans la liste des messages. Appel à la fonction addMessage
-        
-        addMessage(newMessage);
-        e.target.elements.content.value = '';  
+        console.log ("NewMessage: "+JSON.stringify(newMessage)+" mbdd: "+JSON.stringify(mbdd));
+        addMessage(newMessage,currentChannel.id);
+        //e.target.elements.content.value = '';  
     } 
     return (
         <form style={styles.form}  onSubmit={onSubmit}>
             <img src={ChatGravatar()} /> 
-            <input type="input" name="content" style={styles.content} />
+            <input type="text" name="content" style={styles.content} />
             <input type="submit" value="Send" style={styles.send} />
         </form>
     )

@@ -11,11 +11,12 @@ const styles = {
 // Composant channel preview.
 // Reçoit en propriété: son index dans le tableau des channels (de Main) et la une référence
 // sur la fonction setCurrentChannel qui permet de modifier le channel courant
-const ChannelPreview = ({index,setCurrentChannel,name}) => {
+const ChannelPreview = ({index,setCurrentChannel,name,setChannelLoading}) => {
 
     // Clic sur le bouton: on change le channel courant par ce channel, à partir de l'index
     const handleChange = () => {
         setCurrentChannel(index);
+        setChannelLoading(true);
     }
     
     return (

@@ -13,6 +13,7 @@ module.exports = {
     // et l'id de l'utilisateur qui a créé le channel (une string)
     // et userList la liste des utilisateurs {id:"tere",username:"MB"}
     create: async ({channel,userList},idUser) => {
+      console.log ("DB create channel: "+JSON.stringify(channel));
       if(!channel.name) throw Error('Invalid channel');
       if(!idUser) throw Error ('No id provided');
 
@@ -79,9 +80,10 @@ module.exports = {
     // Paramètres: channelID id du channel (string)
     // et message objet de forme {author:"david","content":"bonjour"}
     create: async (channelId, message) => {
+      console.log ("DB create message: "+JSON.stringify(message)+" "+message.author);
       if(!channelId) throw Error('Invalid channel')
-      if(!message.author) throw Error('Invalid message')
-      if(!message.content) throw Error('Invalid message')
+      if(!message.author) throw Error('Invalid message no author')
+      if(!message.content) throw Error('Invalid message no content')
       creation = microtime.now() // date de création du message (instant actuel)
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
@@ -99,8 +101,8 @@ module.exports = {
           gt: `messages:${channelId}:`,
           lte: `messages:${channelId}` + String.fromCharCode(":".charCodeAt(0) + 1),
         }).on( 'data', ({key, value}) => {
-          message = JSON.parse(value);
-          const [, channelId, creation] = key.split(':') // 3 parties de la clé: 'messages','channelId','creation'
+          message = JSON.parse(value); // Le message, objet de type {author:'XXX',content:'blabla'}
+          const [, channelId, creation] = key.split(':') // 3 parties de la clé: '"messages"','$channelId','$creation'
           message.channelId = channelId;
           message.creation = creation;
           messages.push(message);

@@ -160,6 +160,24 @@ const getMessages = async(channelId) => {
     return data;
 }
 
+// Ajouter un message en BDD
+// Prend en paramètre le message à ajouter de type {content:'balbla',author:'David',creation:'11/11/11'}
+// ainsi que l'id du channel
+// Retourne le message créé
+const addMessageDB = async (newMessage,channelId) => {
+    
+    const token = localStorage.getItem('token');
+    console.log ('API addMessageDB newMessage:  '+JSON.stringify(newMessage));
+    const {data} = await axios.post (`${url}/channels/${channelId}/messages`,newMessage,
+    {
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    });  
+    console.log ("API addMessageDB data retour: mess ajouté: "+JSON.stringify(data));
+    return data;
+}
+
 export default {
     apiSignup,
     apiLogin,
@@ -169,6 +187,7 @@ export default {
     getAllChannelsTest,
     getChannelsOfConnectedUser,
     userExists,
-    getMessages
+    getMessages,
+    addMessageDB
     
 };

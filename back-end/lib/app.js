@@ -22,13 +22,13 @@ app.get('/', (req, res) => {
 app.use ('/channels', async (req,res,next) => {
   console.log ("On use");
   // Verifier token dans header
-  console.log (req.headers);
+  //console.log (req.headers);
   
 
   // Si il y a un header 
   if (req.headers.authorization != null) {
     const tokenHeader = req.headers.authorization.split(' ')[1];
-    console.log (tokenHeader);
+    //console.log (tokenHeader);
     let decodedToken ;
     try {
       decodedToken = jwt.verify(tokenHeader,privateKey);
@@ -40,7 +40,7 @@ app.use ('/channels', async (req,res,next) => {
     finally {
       // Variables qui seront passées au middleware suivants
       res.locals.userId = decodedToken.sub;
-      console.log ("MCT: "+res.locals.userId)
+      //console.log ("MCT: "+res.locals.userId)
       
       // passer au middleware/requête suivant
       next();
@@ -140,7 +140,10 @@ app.get('/channels/:id/messages', async (req, res) => {
 });
 
 // Ajoute un message au channel désigné par son id
+// Recoit en paramètre url l'id du channel et en paramètre body le message à ajouter
+// retourne le message ajouté
 app.post('/channels/:id/messages', async (req, res) => {
+  console.log ("back message.post :"+JSON.stringify(req.body));
   const message = await db.messages.create(req.params.id, req.body);
   res.status(201).json(message);
 });
