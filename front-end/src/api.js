@@ -145,6 +145,21 @@ const userExists = async (userName) => {
     }
 }
 
+// Fonction qui cherche les messages d'un channel en BDD
+// Paramètre: l'id du channel
+// Renvoie un tableau de messages
+const getMessages = async(channelId) => {
+    const token = localStorage.getItem('token');
+    const {data} = await axios.get (`${url}/channels/${channelId}/messages`,
+    {
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    });  
+
+    return data;
+}
+
 export default {
     apiSignup,
     apiLogin,
@@ -153,6 +168,7 @@ export default {
     createChannel,
     getAllChannelsTest,
     getChannelsOfConnectedUser,
-    userExists
+    userExists,
+    getMessages
     
 };

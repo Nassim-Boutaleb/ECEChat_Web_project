@@ -50,15 +50,23 @@ const MessageForm = ({addMessage,userConnected}) => {
     let userName = userConnected.username; //localStorage.getItem('userName');
     console.log ("MessageForm: "+userName);
 
-    const onSubmit = (e) => {
-        e.preventDefault()
-        const data = new FormData(e.target)
-        addMessage({
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+
+        const newMessage = {
             content: data.get('content'),
             author: userName,
             creation: Date.now(),
-        })
-        e.target.elements.content.value = ''
+        };
+
+        // Ajout du message en BDD
+        //const mbdd = await api.addMessageDB(newMessage);
+
+        // Ajout du message dans la liste des messages. Appel à la fonction addMessage
+        
+        addMessage(newMessage);
+        e.target.elements.content.value = '';  
     } 
     return (
         <form style={styles.form}  onSubmit={onSubmit}>

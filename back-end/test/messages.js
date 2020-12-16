@@ -6,7 +6,7 @@ const db = require('../lib/db')
 
 describe('messages', () => {
   
-  /*beforeEach( async () => {
+  beforeEach( async () => {
     await db.admin.clear()
   })
   
@@ -61,6 +61,6 @@ describe('messages', () => {
     const {body: messages} = await supertest(app)
     .get(`/channels/${channel.id}/messages`)
     messages.length.should.eql(1)
-  })*/
+  })
   
 })

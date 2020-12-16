@@ -71,6 +71,7 @@ module.exports = {
     }
   },
 
+//____________________________________________________________________________
 
   messages: {
     
@@ -98,20 +99,21 @@ module.exports = {
           gt: `messages:${channelId}:`,
           lte: `messages:${channelId}` + String.fromCharCode(":".charCodeAt(0) + 1),
         }).on( 'data', ({key, value}) => {
-          message = JSON.parse(value)
-          const [, channelId, creation] = key.split(':')
-          message.channelId = channelId
-          message.creation = creation
-          messages.push(message)
+          message = JSON.parse(value);
+          const [, channelId, creation] = key.split(':') // 3 parties de la clé: 'messages','channelId','creation'
+          message.channelId = channelId;
+          message.creation = creation;
+          messages.push(message);
         }).on( 'error', (err) => {
-          reject(err)
+          reject(err);
         }).on( 'end', () => {
-          resolve(messages)
+          resolve(messages);
         })
       })
     },
   },
 
+//_________________________________________________________________________________________
 
   users: {
 

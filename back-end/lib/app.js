@@ -40,7 +40,7 @@ app.use ('/channels', async (req,res,next) => {
     finally {
       // Variables qui seront passées au middleware suivants
       res.locals.userId = decodedToken.sub;
-      console.log ("MCDT: "+res.locals.userId)
+      console.log ("MCT: "+res.locals.userId)
       
       // passer au middleware/requête suivant
       next();
@@ -131,15 +131,18 @@ app.put('/channels/:id', async (req, res) => {
 
 // Messages
 // Renvoie les messages d'un channel à partir de l'id du channel
+// paramètre url : id du channel 
+// retourne: tableau de messages dy type: 
 app.get('/channels/:id/messages', async (req, res) => {
-  const messages = await db.messages.list(req.params.id)
-  res.json(messages)
+  const messages = await db.messages.list(req.params.id);
+  console.log ("Back messages get: "+messages);
+  res.json(messages);
 });
 
 // Ajoute un message au channel désigné par son id
 app.post('/channels/:id/messages', async (req, res) => {
-  const message = await db.messages.create(req.params.id, req.body)
-  res.status(201).json(message)
+  const message = await db.messages.create(req.params.id, req.body);
+  res.status(201).json(message);
 });
 
 //____________________________________________________________________
