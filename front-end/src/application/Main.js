@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import Channels from './Channels'
-import Channel from './Channel'
-import api from './../api'
+import Channels from './channels/Channels'
+import Channel from './messages/Channel'
 import Drawer from '@material-ui/core/Drawer';
 
 
@@ -23,52 +22,15 @@ const styles = {
 
 // Composant Main sous forme de fonction 
 // Props: open = détermine si le menu channels doit être open ou pas
-const Main =  ({open,handleDrawerClose}) => {
+// handleDrawerClose = f° pr fermer le drawer 
+const Main =  ({open,handleDrawerClose,channels,setChannels,currentChannel,setCurrentChannel,userConnected,setUserConnected}) => {
     
-    // Etat: tableau de channels du type [{name:'c1},{name:'c2},...]
-    const  [channels,setChannels] = useState ([]);
-
-    // Id et récupération des infos utilisateur:
-    //let userId = localStorage.getItem('userId');
-    //let userEmail = localStorage.getItem('userEmail');
-    //let userName = localStorage.getItem('userName');
-    //console.log ("MainId: "+userId+" "+userEmail+" "+userName);
-    
-
-    // Etat : channel choisi (index dans le tableau des channels) par défaut channel 0
-    const  [currentChannel,setCurrentChannel] = useState (0);   // useState([0]) par Worms ?!
-    
-    // attendre avant de render
-    const [isLoading, setLoading] = useState(true);
-    // stocker en état l'utilisateur connecté récupéré grâce à l'api {'username':'xxx',...}
-    const [userConnected,setUserConnected] = useState('');
+   
 
     // Gestion du loading du composant channel
     const [channelIsLoading, setChannelLoading] = useState(true);
 
-    // appel à l'API qui va, à partir du token, rechercher l'id de l'utilisateur connecté 
-    // et renvoyer cet utilisateur
-    const getUserConnectedFc = async () => {
-        const userConnected = await api.getUser();
-        //console.log ("Main:YESSS");
-        //console.log ("UCONN: "+JSON.stringify(userConnected));
-        setUserConnected(userConnected);
-    }
-
-    // appel à l'API qui va lister (à partir du token) l'ensemble des channels de l'utilisateur connecté
-    const getChannelsOfConnectedUser = async () => {
-        const {data} = await api.getChannelsOfConnectedUser();
-        console.log ("Data??: "+JSON.stringify(data));
-        setChannels ([...data]);
-        setLoading(false);
-    }
     
-    // tant que axios n'a pas répondu avec le user connected et chargé les channels
-    if (isLoading) {
-        getUserConnectedFc();
-        getChannelsOfConnectedUser();
-        return <div className="App">Loading...</div>;
-    }
 
     
     
@@ -86,7 +48,7 @@ const Main =  ({open,handleDrawerClose}) => {
                 open={open}
                 onClose={handleDrawerClose}
             >
-                <Channels 
+                <Channels
                     setCurrentChannel={setCurrentChannel}
                     channels={channels}
                     setChannels={setChannels}

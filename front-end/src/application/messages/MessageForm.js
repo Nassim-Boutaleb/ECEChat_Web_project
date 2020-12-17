@@ -1,6 +1,6 @@
 import React,{useState} from'react';
-import api from './../api';
-import ChatGravatar from './Gravatar';
+import api from '../../api';
+import ChatGravatar from '../Gravatar';
 
 // Styles
 const styles = {
@@ -60,6 +60,7 @@ const MessageForm = ({addMessage,userConnected,currentChannel}) => {
             author: userName,
             creation: Date.now(),
         };
+        e.target.elements.content.value = ''; // réinitialiser contenu formulaire
 
         // Ajout du message en BDD
         const mbdd = await api.addMessageDB(newMessage,currentChannel.id);
@@ -68,6 +69,7 @@ const MessageForm = ({addMessage,userConnected,currentChannel}) => {
         console.log ("NewMessage: "+JSON.stringify(newMessage)+" mbdd: "+JSON.stringify(mbdd));
         addMessage(newMessage,currentChannel.id);
         //e.target.elements.content.value = '';  
+        
     } 
     return (
         <form style={styles.form}  onSubmit={onSubmit}>

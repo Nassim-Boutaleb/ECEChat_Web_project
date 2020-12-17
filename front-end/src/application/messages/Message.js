@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import ChatGravatar from './Gravatar';
+import ChatGravatar from '../Gravatar';
 
 const styles = {
     message: {

@@ -10,13 +10,27 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import api from './../api'
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import api from '../../api'
+import { StylesProvider } from '@material-ui/core';
+
+
+const styles = {
+  userInput: {
+      display: 'flex',
+  },
+};
+
+
+
 
 const ChannelNewDialog = ({setChannels,channels}) => {
   const [open, setOpen] = React.useState(false);  // Gestion boite dialogue
   const [channelName,setChannelName] = useState('');  // stocker le nom du channel saisi
   const [userList,setUserList] = useState([]);  // Liste des ID et username des utilisateurs du channel
   const [userName,setUserName] = useState('');  // nom du user à ajouter à la liste des user
+  const [userStatus,setUserStatus] = useState('utilisateur');  // statut de l'utilisateur (admin ou utilisateur)
 
   // gestion erreurs
   const [errorUser,setErrorUser] = useState(false);
@@ -31,6 +45,9 @@ const ChannelNewDialog = ({setChannels,channels}) => {
       else if (champModifie === 'userName') {
           //setUserList([...userList,newValue]);
           setUserName (newValue);
+      }
+      else if (champModifie == 'userStatus') {
+        setUserStatus(newValue);
       }
   }
 
@@ -57,10 +74,10 @@ const ChannelNewDialog = ({setChannels,channels}) => {
       }
       else {
         //alert ("Trouvé id= "+data);
-        setUserList([...userList,{id:data,username:userName}]);
+        setUserList([...userList,{id:data,username:userName,status:userStatus}]);
         setErrorUser(false);
       }
-      console.log ("CGD: "+typeof setChannels === 'function');
+      //console.log ("CGD: "+typeof setChannels === 'function');
   }
 
   // supprimer l'utilisateur de la liste des utilisateurs à ajouter à partir de son index
@@ -114,19 +131,31 @@ const ChannelNewDialog = ({setChannels,channels}) => {
             helperText={channelName === ''?'Veuillez saisir un nom pour le channel': ''}
           />
 
-          <TextField
-            margin="dense"
-            id="userName"
-            name="userName"
-            label="Utilisateur à ajouter"
-            type="text"
-            value={userName}
-            onChange = {handleChange}
-            fullWidth
-            error={errorUser}
-            helperText={errorUser?'Cet utilisateur n\'existe pas': ''}
-          />
+          <div style={styles.userInput}>
+              <TextField
+                margin="dense"
+                id="userName"
+                name="userName"
+                label="Utilisateur à ajouter"
+                type="text"
+                value={userName}
+                onChange = {handleChange}
+                fullWidth
+                error={errorUser}
+                helperText={errorUser?'Cet utilisateur n\'existe pas': ''}
+              />
 
+              <Select
+              labelId="Statut utilisateur"
+              id="userStatus"
+              value={userStatus}
+              onChange={handleChange}
+              name='userStatus'
+              >
+                  <MenuItem value='utilisateur'>utilisateur</MenuItem>
+                  <MenuItem value='administrateur'>administrateur</MenuItem>
+              </Select>
+          </div>
           <Button variant="contained" onClick={handleAddUser} color="secondary">
             Ajouter utilisateur au channel
           </Button>
@@ -136,7 +165,7 @@ const ChannelNewDialog = ({setChannels,channels}) => {
             {
               userList.map ( (it,index) => (
                   <li key={it.id} >
-                    {it.username} 
+                    {it.username}         ({it.status})
                     <IconButton aria-label="delete" onClick={()=> delUser(index)}><DeleteIcon /></IconButton> 
                   </li>
               ))

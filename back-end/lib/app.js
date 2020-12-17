@@ -75,7 +75,7 @@ app.get('/channels', async (req, res) => {
   for (var i=0; i< channels.length; ++i) {
       for (j=0; j<channels[i].idUsers.length; j++) {
           //console.log ("jaja: "+channels[i].idUsers[j]+" i= "+i);
-          if (channels[i].idUsers[j] === userId) {
+          if (channels[i].idUsers[j].id === userId) {
               //console.log ("On push");
               channelsOfUser.push (channels[i]);
           }

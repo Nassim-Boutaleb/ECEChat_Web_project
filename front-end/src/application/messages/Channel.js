@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import Messages from './Messages'
 import MessageForm from './MessageForm'
-import api from '../api';
+import api from '../../api';
 
 // définition du style
 const styles = {
@@ -46,7 +46,7 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
     });*/ // [] <=> useEffect sera appellée 1 seule fois, au chargement du composant uniquement et pas après chaque mise a jour
     
     const getMessages = async () => {
-        const messagesGet = await api.getMessages(channel.id); //getMessagesFcn();
+        const messagesGet = await api.getMessages(channel.id); //retourne tableau de messages
         console.log ("Front: messagesGet Channel: "+messagesGet);
         setMessages (messagesGet);
         setLoading(false);

@@ -11,7 +11,7 @@ module.exports = {
     //Creation d'un channel en BDD
     // Recoit en paramètre le contenu du channel sous forme d'objet {name:"channel1"}
     // et l'id de l'utilisateur qui a créé le channel (une string)
-    // et userList la liste des utilisateurs {id:"tere",username:"MB"}
+    // et userList la liste des utilisateurs {id:"tere",username:"MB",status:'utilisateur'}
     create: async ({channel,userList},idUser) => {
       console.log ("DB create channel: "+JSON.stringify(channel));
       if(!channel.name) throw Error('Invalid channel');
@@ -20,9 +20,9 @@ module.exports = {
       const id = uuid(); // définir un id pour le channel
 
       const idUsers = []; 
-      // ajouter les ID contenus dans userList à idUsers 
+      // ajouter les ID et status contenus dans userList à idUsers 
       for (let i=0; i<userList.length; ++i) {
-        idUsers.push (userList[i].id);
+        idUsers.push ({id: userList[i].id, status: userList[i].status});
       }
       //idUsers.push(idUser);  // finalement le créateur sera en creator (super admin)
       console.log ("BDD:Idusers: "+idUsers);
@@ -30,6 +30,7 @@ module.exports = {
       const channelP = merge (channel,{idUsers: idUsers,creatorId: idUser});
       console.log (channelP);
 
+      // ce que l'on met en bdd (value): {name:'chan1',creatorId:'xxx',idUsers:[{id:'zzz',status:'utilisateur'}]}
       await db.put(`channels:${id}`, JSON.stringify(channelP))
       return merge(channelP, {id: id})
     },
@@ -87,7 +88,8 @@ module.exports = {
       creation = microtime.now() // date de création du message (instant actuel)
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
-        content: message.content
+        content: message.content,
+        creation: message.creation
       }))
       return merge(message, {channelId: channelId, creation: creation})
     },
@@ -104,7 +106,7 @@ module.exports = {
           message = JSON.parse(value); // Le message, objet de type {author:'XXX',content:'blabla'}
           const [, channelId, creation] = key.split(':') // 3 parties de la clé: '"messages"','$channelId','$creation'
           message.channelId = channelId;
-          message.creation = creation;
+          //message.creation = creation;
           messages.push(message);
         }).on( 'error', (err) => {
           reject(err);

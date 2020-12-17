@@ -89,7 +89,7 @@ const getUser = async () => {
 
 // Creation d'un channel 
 // Paramètre: objet channel {name:"channel1"}
-// et userList : [{id:"cvvs",username:"MB"}]
+// et userList : [{id:"cvvs",username:"MB",status:'utilisateur'}]
 // retourne: le channel créé
 const createChannel = async (channel,userList) => {
     const token = localStorage.getItem('token');
