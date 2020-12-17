@@ -4,7 +4,8 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import ChannelNameManager from './ChannelNameManager'
-
+import ChannelUsersManager from './ChannelUsersManager'
+import api from '../../api';
 
 const styles = {
     wrapper: {
@@ -14,7 +15,7 @@ const styles = {
     
   };
 
-const ManageChannel = () => {
+const ManageChannel = ({channels,setChannels,currentChannel}) => {
     // Gestion du menu
     const [anchorEl, setAnchorEl] = React.useState(null);
     
@@ -44,6 +45,16 @@ const ManageChannel = () => {
 //________________________________________________________
     //Gestion menu des permissions utilisateurs
 
+    const [ChannelUsersOpen, setChannelUsersOpen] = React.useState(false);
+
+    const handleChannelUsersOpen = () => {
+        setChannelUsersOpen(true);
+        handleMenuClose();
+    };
+  
+    const handleChannelUsersClose = () => {
+        setChannelUsersOpen(false);
+    };
 
 //__________________________________________________________
     
@@ -58,9 +69,22 @@ const ManageChannel = () => {
           onClose={handleMenuClose}
         >
             <MenuItem onClick={handleChannelNameOpen}>Modifier nom du channel</MenuItem>
-                <ChannelNameManager open={ChannelNameOpen} handleClose={handleChannelNameClose} />
-            <MenuItem onClick={handleMenuClose}>Gerer les utilisateurs</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Supprimer le channel</MenuItem>
+                <ChannelNameManager 
+                    open={ChannelNameOpen} 
+                    handleClose={handleChannelNameClose} 
+                    channels= {channels}
+                    setChannels= {setChannels}
+                    currentChannel={currentChannel}
+                />
+            <MenuItem onClick={handleChannelUsersOpen}>Gerer les utilisateurs</MenuItem>
+                <ChannelUsersManager 
+                        open={ChannelUsersOpen} 
+                        handleClose={handleChannelUsersClose} 
+                        channels= {channels}
+                        setChannels= {setChannels}
+                        currentChannel={currentChannel}
+                />
+            <MenuItem onClick={handleMenuClose}>Supprimer le channel/Quitter le channel</MenuItem>
         </Menu>
     );
     

@@ -25,15 +25,9 @@ const styles = {
 // handleDrawerClose = f° pr fermer le drawer 
 const Main =  ({open,handleDrawerClose,channels,setChannels,currentChannel,setCurrentChannel,userConnected,setUserConnected}) => {
     
-   
-
     // Gestion du loading du composant channel
     const [channelIsLoading, setChannelLoading] = useState(true);
 
-    
-
-    
-    
 
     // Channels: composant qui contient la liste des channels
         // on lui passe en propriété la liste des channels et la fonction permettant de modifier cette liste

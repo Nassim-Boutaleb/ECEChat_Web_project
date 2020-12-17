@@ -24,7 +24,12 @@ const styles = {
     }
   };
 
-const Navbar = ({handleDrawerOpen}) => {
+// Props: handleDrawerOpen = fonction permettant d'ouvrir le drawer (composant Main)
+// userConnected = objet contenant les données du user connecté
+// channels = tableau contenant la liste des channels
+// setChannels = MAJ des channels
+// currentChannel = index du currentChannel
+const Navbar = ({handleDrawerOpen,userConnected,channels,setChannels,currentChannel}) => {
     return (
         <div style={styles.root}>
           <AppBar position="static" style={styles.navbar}>
@@ -33,7 +38,7 @@ const Navbar = ({handleDrawerOpen}) => {
                 <MenuIcon />
               </IconButton>
               <span style={styles.title}> </span>  {/*Un espace qui grossit automatiquement */}
-              <ManageChannel/>
+              <ManageChannel channels={channels} setChannels={setChannels} currentChannel={currentChannel}/>
               <span style={styles.title}> </span> 
               <ManageAccount/>
             </Toolbar>

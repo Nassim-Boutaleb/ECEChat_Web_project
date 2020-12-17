@@ -3,13 +3,36 @@ import moment from 'moment'
 import ChatGravatar from '../Gravatar';
 
 const styles = {
-    message: {
+    messageFromMe: {
         margin: '.2rem',
         padding: '.2rem',
+        border: '3px solid',
+        borderRadius: '20px',
+        margin: '15px',
+        padding: '15px',
         // backgroundColor: '#66728E',
         ':hover': {
           backgroundColor: 'rgba(255,255,255,.2)',
         },
+        backgroundColor: '#87CEFA',
+        width: '50%',
+        textAlign:'left',
+        alignSelf: 'flex-end'
+    },
+    messageFromAnother: {
+        margin: '.2rem',
+        padding: '.2rem',
+        border: '3px solid',
+        borderRadius: '20px',
+        margin: '15px',
+        padding: '15px',
+        // backgroundColor: '#66728E',
+        ':hover': {
+          backgroundColor: 'rgba(255,255,255,.2)',
+        },
+        backgroundColor: '#FF6347',
+        width: '50%',
+        textAlign:'left'
     },
 };
 
@@ -23,7 +46,9 @@ const Nl2br = message => (
 );
 
 // Composant message qui contient un message individuel. Une prop = le message à afficher
-const Message = ({message}) => {
+// de forme  {"author": "T9","content": "Bonjour","channelId": "cf"}
+
+const Message = ({message,me}) => {
     
     moment.locale('fr', {
         months : 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split('_'),
@@ -89,9 +114,9 @@ const Message = ({message}) => {
     const date = moment(message.creation).fromNow();
 
     return (
-        <li style={styles.message}>
+        <button style={me ? styles.messageFromMe: styles.messageFromAnother}>
             <p>
-                <span>{message.author}</span>
+                <span>{message.author}</span> {/** A terme message aura seulement l'id, il faudra récupérer le username avec la fonction dédiée dan l'API */}
                 <img src={ChatGravatar()}  width='30px'/> 
                 {' '}
                 <span>{date}</span>
@@ -100,7 +125,7 @@ const Message = ({message}) => {
             <div>
                 {Nl2br(message)}
             </div>
-        </li>
+        </button>
     );
 };
 

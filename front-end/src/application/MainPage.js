@@ -20,32 +20,32 @@ const styles = {
 
 const MainPage = () => {
 
-  // Drawer
-  const [open, setOpen] = React.useState(false);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+    // Drawer channels 
+    const [open, setOpen] = React.useState(false);
+    const handleDrawerOpen = () => {
+      setOpen(true);
+    };
+    const handleDrawerClose = () => {
+      setOpen(false);
+    };
 
-    // Gestion channels, currentChannel et connected user + chargement page
-   // Etat: tableau de channels du type [{name:'c1},{name:'c2},...]
-   const  [channels,setChannels] = useState ([]);
+  // Gestion channels, currentChannel et connected user + chargement page
+  // State: tableau de channels du type [{name:'c1},{name:'c2},...]
+  const  [channels,setChannels] = useState ([]);
 
-    
-
-   // Etat : channel choisi (index dans le tableau des channels) par défaut channel 0
-   const  [currentChannel,setCurrentChannel] = useState (0);   // useState([0]) par Worms ?!
+  // State : channel choisi (index dans le tableau des channels) par défaut channel 0
+  const  [currentChannel,setCurrentChannel] = useState (0);   // useState([0]) par Worms ?!
    
-   // attendre avant de render
-   const [isLoading, setLoading] = useState(true);
-   // stocker en état l'utilisateur connecté récupéré grâce à l'api {'username':'xxx',...}
-   const [userConnected,setUserConnected] = useState('');
+  // State: stocker l'utilisateur connecté récupéré grâce à l'api {'username':'xxx',...}
+  const [userConnected,setUserConnected] = useState('');
+  
+  // attendre avant de render
+  const [isLoading, setLoading] = useState(true);
+
 
   // appel à l'API qui va, à partir du token, rechercher l'id de l'utilisateur connecté 
-    // et renvoyer cet utilisateur
-    const getUserConnectedFc = async () => {
+  // et renvoyer cet utilisateur
+  const getUserConnectedFc = async () => {
       const userConnected = await api.getUser();
       //console.log ("Main:YESSS");
       //console.log ("UCONN: "+JSON.stringify(userConnected));
@@ -67,9 +67,18 @@ const MainPage = () => {
       return <div className="App">Loading...</div>;
   }
 
+  // Fonction permettant de mettre a jour un channel du tableau de channel // finalement non ? 
+
     return (
         <div style={styles.root}>
-            <Navbar handleDrawerOpen={handleDrawerOpen}/>
+            <Navbar 
+              handleDrawerOpen={handleDrawerOpen}
+              userConnected={userConnected}
+              channels={channels}
+              setChannels={setChannels}
+              currentChannel={currentChannel}
+            />
+
             <Main 
                 open={open} 
                 onClick={handleDrawerClose} 

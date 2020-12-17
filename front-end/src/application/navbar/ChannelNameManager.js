@@ -6,20 +6,29 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import api from '../../api';
 
-const ChannelNameManager = ({open,handleClose}) => {
+// Boite de dialogue pour changer le nom du channel
+const ChannelNameManager = ({open,handleClose,channels,setChannels,currentChannel}) => {
 
     const [channelName,setChannelName] = useState('');
     
-    const handleSubmit = async () => {
-        alert ("submit");
-
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         // Modifier channel
-        //const newChannel = channel.copy();  // a verifier
-        // newChannel.name = channelName;
-        
-        // Modifier le channel en BDD
-        // await api.updateChannel (channel);
+        //1) On récupère le channel dans une nouvelle variable à partir de son index et on le MAJ
+        let newChannel = channels[currentChannel];
+        newChannel.name = channelName;
+
+        //2) Mise a jour en base de données
+        await api.updateChannel (newChannel);
+
+        //3) Mise a jour du tableau channels avec setChannels et appel auto de Render()
+        let newChannelsList = channels.slice();
+        newChannelsList [currentChannel] = newChannel;
+        setChannels (newChannelsList);
+
+        //4) Fermer la boite de dialogue
         handleClose();
     }
 

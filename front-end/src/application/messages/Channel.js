@@ -83,6 +83,7 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
                 <Messages
                     messages={messages}
                     channel = {channel}
+                    userConnected = {userConnected}
                 />
                 <MessageForm 
                     addMessage={addMessage}

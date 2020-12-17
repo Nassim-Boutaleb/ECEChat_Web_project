@@ -24,7 +24,7 @@ module.exports = {
       for (let i=0; i<userList.length; ++i) {
         idUsers.push ({id: userList[i].id, status: userList[i].status});
       }
-      //idUsers.push(idUser);  // finalement le créateur sera en creator (super admin)
+      
       console.log ("BDD:Idusers: "+idUsers);
 
       const channelP = merge (channel,{idUsers: idUsers,creatorId: idUser});
@@ -60,10 +60,24 @@ module.exports = {
       })
     },
 
-    update: (id, channel) => {
-      const original = store.channels[id]
-      if(!original) throw Error('Unregistered channel id')
-      store.channels[id] = merge(original, channel)
+    update: async (id, channel) => {
+        if(!channel.name) throw Error('Invalid channel');
+
+        // on ne peut pas juste JSON.str(channel) car cela passerait l'id du channel en contenu
+        // en bdd or c'est la clé
+        await db.put(`channels:${id}`, JSON.stringify({
+          name: channel.name,
+          idUsers: channel.idUsers,
+          creatorId: channel.creatorId
+        }));
+
+        console.log ("BDD update channel: "+JSON.stringify({
+          name: channel.name,
+          idUsers: channel.idUsers,
+          creatorId: channel.creatorId
+        }));
+        return merge(channel, {id: id});
+
     },
 
     delete: (id, channel) => {

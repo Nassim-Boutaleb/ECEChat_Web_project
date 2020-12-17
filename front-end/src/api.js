@@ -67,6 +67,7 @@ const tokenExists = () => {
 // puis retourne cet utilisateur sous la forme objet {"username":"T9","email":"test@gmail.com","password":"T99","id":"ce4ea26c-5abc-4060-b98f-18c11d627eec"}
 const getUser = async () => {
     const token =  localStorage.getItem('token');
+    console.log ("Token :"+token);
     const decToken = jwt.verify(token,privateKey);
     const userId = decToken.sub;
     console.log ("Token dec: "+JSON.stringify(decToken)+" id: "+userId);
@@ -77,15 +78,7 @@ const getUser = async () => {
     return data;
 }
 
-/*const handleClickTest = async () => {
-    const token = localStorage.getItem('token');
-    const rep = await axios.get(`${url}/channels`,{
-        headers : {
-            'authorization' :   'Bearer ' + token
-        }
-    });
-    console.log ("APIRES: "+rep);
-}*/
+
 
 // Creation d'un channel 
 // Paramètre: objet channel {name:"channel1"}
@@ -178,6 +171,52 @@ const addMessageDB = async (newMessage,channelId) => {
     return data;
 }
 
+// Mettre a jour un channel en BDD
+// Param : le nouveu channel sous la forme 
+//{"name": "Channel3","idUsers": [{"id": "55","status": "utilisateur"}],"creatorId": "47","id": "b9"}
+// Retour: le nouveau channel sous la même forme
+const updateChannel = async(newChannel) => {
+    // récupérer ID du channel pour l'appel axios
+    const newChannelId = newChannel.id;
+
+    // token
+    const token = localStorage.getItem('token');
+
+    // axios
+    const {data} = await axios.put (`${url}/channels/${newChannelId}`,newChannel,
+    {
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    });  
+    console.log ("API updateChannel data retour:  "+JSON.stringify(data));
+    return data;
+
+}
+
+// Associer à un id user son username
+// Recoit en paramètre un tableau d'ID users ['nkm','vge','bhl']
+// Retourne un tableau d'objet associant [{id:'nkm',username:'Nath',email:'zzz'},{}]
+const getUsernameFromId = async (userListId) => {
+    console.log ("api UNID: "+JSON.stringify(userListId));
+    // 1) Récupérer la liste des utilisateurs de l'app
+    // retourne un tableau de users
+    const {data} = await axios.get (`${url}/users`);
+
+    // 2) définir le tableau d'objets à rendre
+    const userIdUsername = [];
+
+    // 3) Parcourir les listes et associer id avec username et email
+    for (let i=0; i<userListId.length; ++i) {
+        for (let j=0; j<data.length;++j) {
+            if (userListId[i] === data[j].id) {
+                userIdUsername.push ({id:userListId[i],userName: data[j].username,email: data[j].email });
+            }
+        }
+    }
+    return userIdUsername;
+}
+
 export default {
     apiSignup,
     apiLogin,
@@ -188,6 +227,8 @@ export default {
     getChannelsOfConnectedUser,
     userExists,
     getMessages,
-    addMessageDB
+    addMessageDB,
+    updateChannel,
+    getUsernameFromId
     
 };
