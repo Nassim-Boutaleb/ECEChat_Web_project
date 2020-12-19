@@ -38,8 +38,7 @@ const Messages =  ({messages,channel,userConnected}) => {
             
             <ul style={styles.list}>
                 { messages.map( (it) => (
-                    <Message key={it.creation} message={it} me={it.author===userConnected.username} />  
-                    /**Il faudra plutot comparer les ID !! */
+                    <Message key={it.creation} message={it} me={it.author===userConnected.id} />  
                 ))}
             </ul>
         

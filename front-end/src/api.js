@@ -196,7 +196,7 @@ const updateChannel = async(newChannel) => {
 
 // Associer à un id user son username
 // Recoit en paramètre un tableau d'ID users ['nkm','vge','bhl']
-// Retourne un tableau d'objet associant [{id:'nkm',username:'Nath',email:'zzz'},{}]
+// Retourne un tableau d'objet associant [{id:'nkm',userName:'Nath',email:'zzz'},{}]
 const getUsernameFromId = async (userListId) => {
     console.log ("api UNID: "+JSON.stringify(userListId));
     // 1) Récupérer la liste des utilisateurs de l'app

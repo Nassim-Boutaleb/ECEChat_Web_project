@@ -163,6 +163,12 @@ app.delete('/channels/:id/messages', async (req, res) => {
   res.status(201).json(data);
 });
 
+// Supprimer un message à partir de sa clé (channelId et creationForId)
+app.delete('/channels/:id/messages/:creaId', async (req, res) => {
+  const data = await db.messages.delete(req.params.id,req.params.creaId);
+  res.status(201).json(data);
+});
+
 
 //____________________________________________________________________
 // USERS

@@ -46,9 +46,43 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
     });*/ // [] <=> useEffect sera appellée 1 seule fois, au chargement du composant uniquement et pas après chaque mise a jour
     
     const getMessages = async () => {
-        const messagesGet = await api.getMessages(channel.id); //retourne tableau de messages
-        console.log ("Front: messagesGet Channel: "+messagesGet);
-        setMessages (messagesGet);
+        // 1. on récupère en BDD un tableau de la forme 
+        //{"author": "47","content": "Oups !","creation": 1608379742248,"channelId": "cf","creationForId": "1608379742287325"}
+        const messagesGet = await api.getMessages(channel.id);
+        console.log ("les messages de "+channel.name+"= "+JSON.stringify(messagesGet));
+
+        //2. On souhaite y ajouter un champ authorUsername contenant le username de celui qui a posté le message
+        // et son email (pour gravatar)
+        // une fonction getUsernameFromId de api.js permet d'associer à partir d'un tableau d'id le username et email
+        if (messagesGet.length > 0) {  // s'il y a des messages !
+            // Construction du tableau d'ID:
+            const idAuthor = [];
+            for (let i=0; i<messagesGet.length; ++i) {
+                idAuthor.push (messagesGet[i].author);
+            }
+
+            // appel à l'api
+            const usernameAuthor = await api.getUsernameFromId(idAuthor);
+            console.log ("length: "+usernameAuthor.length);
+            // Réassocier toutes les données du message avec les nouvelles données
+            const messagesWithAuthorUsername =[]
+            for (let i=0; i<usernameAuthor.length; ++i) {
+                messagesWithAuthorUsername.push ({
+                    author: messagesGet[i].author,
+                    authorUsername: usernameAuthor[i].userName,
+                    authorEmail: usernameAuthor[i].email,
+                    content: messagesGet[i].content,
+                    creation: messagesGet[i].creation,
+                    channelId: messagesGet[i].channelId,
+                    creationForId: messagesGet[i].creationForId
+                })
+            }
+            console.log ("les messages de "+channel.name+"= "+JSON.stringify(messagesWithAuthorUsername));
+            setMessages (messagesWithAuthorUsername);
+        }
+        else {
+            setMessages ([]);
+        }
         setLoading(false);
     }
     if (isLoading) {
@@ -68,8 +102,8 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
 
     // TEST
     const getAllMessagesTest = async () => {
-        const messagesGet = await api.getMessages(channel.id); //getMessagesFcn();
-        console.log ("les messages de "+channel.name+"= "+JSON.stringify(messagesGet));
+        
+        
     }
 
     

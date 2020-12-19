@@ -159,8 +159,13 @@ module.exports = {
         })
     },
 
-    delete: async (channelId) =>  {
-      
+    delete: async (channelId,creaId) =>  {
+        try {
+            db.del(`messages:${channelId}:${creaId}`);
+            return ('message successfully deleted');
+        }catch (e) {
+            return (e);
+        }
     },
 
   },

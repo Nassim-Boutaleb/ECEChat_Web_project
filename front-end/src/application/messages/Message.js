@@ -46,7 +46,7 @@ const Nl2br = message => (
 );
 
 // Composant message qui contient un message individuel. Une prop = le message à afficher
-// de forme  {"author": "T9","content": "Bonjour","channelId": "cf"}
+// de forme  {"author":"47","authorUsername":"T9","authorEmail":"test@mail.com","content":"C3 1","creation":1608381214566,"channelId":"3b","creationForId":"1608381214579429"}
 
 const Message = ({message,me}) => {
     
@@ -116,8 +116,8 @@ const Message = ({message,me}) => {
     return (
         <button style={me ? styles.messageFromMe: styles.messageFromAnother}>
             <p>
-                <span>{message.author}</span> {/** A terme message aura seulement l'id, il faudra récupérer le username avec la fonction dédiée dan l'API */}
-                <img src={ChatGravatar()}  width='30px'/> 
+                <span>{message.authorUsername}</span> {/** A terme message aura seulement l'id, il faudra récupérer le username avec la fonction dédiée dan l'API */}
+                <img src={ChatGravatar(message.authorEmail)}  width='30px'/> 
                 {' '}
                 <span>{date}</span>
             </p>
