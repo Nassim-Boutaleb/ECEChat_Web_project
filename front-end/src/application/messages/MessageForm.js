@@ -66,12 +66,12 @@ const MessageForm = ({addMessage,userConnected,currentChannel}) => {
         const mbdd = await api.addMessageDB(newMessage,currentChannel.id);
 
         // Ajout du message dans la liste des messages. Appel à la fonction addMessage
-        console.log ("NewMessage: "+JSON.stringify(newMessage)+" mbdd: "+JSON.stringify(mbdd));
+        console.log (" mbdd: "+JSON.stringify(mbdd));
 
         // Pour affichage du username
-        newMessage.authorUsername = userConnected.username;
-        newMessage.authorEmail = userConnected.email;
-        addMessage(newMessage,currentChannel.id); 
+        mbdd.authorUsername = userConnected.username;
+        mbdd.authorEmail = userConnected.email;
+        addMessage(mbdd,currentChannel.id); 
     } 
     return (
         <form style={styles.form}  onSubmit={onSubmit}>

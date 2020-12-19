@@ -254,6 +254,50 @@ const deleteChannel = async (channelId) => {
      return data;
 }
 
+// Cette fonction permet la "suppression" d'un message
+// Elle regarde le rôle de l'utilisateur dans le channel
+// Si l'utilisateur est le créateur du channel alors le message est définitivement supprimé
+// Sinon seul le contenu du message est supprimé
+const deleteMessage = async (message,channel,userConnected) => {
+    const channelId = channel.id;
+    const creaId = message.creationForId;
+    const token = localStorage.getItem('token');
+
+    //1.Vérifier l'authorisation du user
+    let auth = 0; // simple user
+    if (userConnected.id === channel.creatorId) {
+        auth = 3; // créateur
+    }
+
+    //2.Si on est créateur du channel: supprimer totalement le message
+    if (auth === 3) {
+        const {data} = await axios.delete (`${url}/channels/${channelId}/messages/${creaId}`,
+        {
+            headers : {
+                'authorization' :   'Bearer ' + token
+            }
+        });
+        return 'creatorDeletion'; 
+    }
+    // Si on ne l'est pas: on va faire appel à la fonction de update message
+    // en modifiant le contenu
+    else {
+        message.content = 'message supprimé par son auteur';
+        message.alive = false;
+        console.log ("Del mess user: "+token);
+        const {data} = await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,message,
+        {
+            headers : {
+                'authorization' :   'Bearer ' + token
+            }
+        });
+
+        
+        return 'userDeletion'; 
+    }
+    
+}
+
 // Cette fonction déconnecte l'utilisteur en supprimant le token stocké dans localStorage
 const logout = () => {
     localStorage.clear();
@@ -275,6 +319,7 @@ export default {
     getUsernameFromId,
     deleteChannelMessages,
     deleteChannel,
-    logout
+    logout,
+    deleteMessage
     
 };

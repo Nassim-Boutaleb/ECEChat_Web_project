@@ -1,6 +1,8 @@
 import React from 'react'
 import moment from 'moment'
 import ChatGravatar from '../Gravatar';
+import IconButton from '@material-ui/core/IconButton';
+import MessageManager from './MessageManager'
 
 const styles = {
     messageFromMe: {
@@ -15,9 +17,10 @@ const styles = {
           backgroundColor: 'rgba(255,255,255,.2)',
         },
         backgroundColor: '#87CEFA',
-        width: '50%',
+        width: '100%',
         textAlign:'left',
-        alignSelf: 'flex-end'
+        //marginLeft: 'auto',
+        order:'3'
     },
     messageFromAnother: {
         margin: '.2rem',
@@ -31,9 +34,40 @@ const styles = {
           backgroundColor: 'rgba(255,255,255,.2)',
         },
         backgroundColor: '#FF6347',
-        width: '50%',
-        textAlign:'left'
+        width: '100%',
+        textAlign:'left',
+        order:'1'
     },
+    messageDeleted: {
+        margin: '.2rem',
+        padding: '.2rem',
+        border: '3px solid',
+        borderRadius: '20px',
+        margin: '15px',
+        padding: '15px',
+        ':hover': {
+          backgroundColor: 'rgba(255,255,255,.2)',
+        },
+        backgroundColor: '#696969',
+        width: '100%',
+        textAlign:'left',
+        fontStyle: 'italic',
+        //marginLeft: 'auto',
+        order:'3'
+    },
+    wrapperFromMe: {
+        alignSelf:'flex-end',
+        width:'50%',
+        display: 'flex'
+    },
+    wrapperFromAnother: {
+        width:'50%',
+        display:'flex'
+    },
+    icon : {
+        order:'2'
+    },
+    
 };
 
 // fonction nl2br gestion des sauts de ligne
@@ -48,7 +82,7 @@ const Nl2br = message => (
 // Composant message qui contient un message individuel. Une prop = le message à afficher
 // de forme  {"author":"47","authorUsername":"T9","authorEmail":"test@mail.com","content":"C3 1","creation":1608381214566,"channelId":"3b","creationForId":"1608381214579429"}
 
-const Message = ({message,me}) => {
+const Message = ({message,me,index,handleDeleteMessage,isCreator}) => {
     
     moment.locale('fr', {
         months : 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split('_'),
@@ -112,20 +146,41 @@ const Message = ({message,me}) => {
     });
       
     const date = moment(message.creation).fromNow();
+    const dateMod = message.lastModified !== 'never' ? moment(message.creation).fromNow() : null;
+    const alive = message.alive ;  // message supprimé ?
 
+    let menuMessageDisplay = me ? true : false ;  // afficher le menu de gestion du message si je suis l'auteur du message
+    if (isCreator) {  // si je suis le créateur du channel, j'ai tt pouvoir !!
+        menuMessageDisplay = true;
+    }
+    if (message.alive === false) {
+        menuMessageDisplay = false ;  // si message supprimé: on le resupprime pas ni on le modifie
+    }
+    console.log ("YALA: "+isCreator);
     return (
-        <button style={me ? styles.messageFromMe: styles.messageFromAnother}>
-            <p>
-                <span>{message.authorUsername}</span> {/** A terme message aura seulement l'id, il faudra récupérer le username avec la fonction dédiée dan l'API */}
-                <img src={ChatGravatar(message.authorEmail)}  width='30px'/> 
-                {' '}
-                <span>{date}</span>
-            </p>
-            
-            <div>
-                {Nl2br(message)}
+        <div style={me ? styles.wrapperFromMe : styles.wrapperFromAnother}>
+            <div style={!alive ? styles.messageDeleted : me ? styles.messageFromMe : styles.messageFromAnother}>
+                <p>
+                    <span>{message.authorUsername}</span> {/** A terme message aura seulement l'id, il faudra récupérer le username avec la fonction dédiée dan l'API */}
+                    <img src={ChatGravatar(message.authorEmail)}  width='30px'/> 
+                    {' '}
+                    <span>{date}</span>
+                    {message.lastModified !== 'never' && <p>Modifié {dateMod}</p> }
+                </p>
+                
+                <div>
+                    {Nl2br(message)}
+                </div>
             </div>
-        </button>
+            { menuMessageDisplay &&
+                <MessageManager 
+                    index={index} 
+                    message={message} 
+                    handleDeleteMessage={handleDeleteMessage}
+                />
+            }
+            
+        </div>
     );
 };
 

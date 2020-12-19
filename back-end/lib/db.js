@@ -98,7 +98,7 @@ module.exports = {
     
     // Crée un message à partir du channel id passé en paramètre
     // Paramètres: channelID id du channel (string)
-    // et message objet de forme {author:"david","content":"bonjour"}
+    // et message objet de forme {author:"david","content":"bonjour",creation:"ejdj"}
     create: async (channelId, message) => {
       console.log ("DB create message: "+JSON.stringify(message)+" "+message.author);
 
@@ -108,15 +108,17 @@ module.exports = {
 
       creation = microtime.now(); // date de création du message (instant actuel)
       // Un message est identifié par son channelId et sa date de création qui doit donc
-      // être la + précise possible 
+      // être la + précise possible d'où le fait qu'on utilise pas message.creation pas assez précis
 
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
         content: message.content,
         creation: message.creation,
+        lastModified: 'never',
+        alive: true
       }));
 
-      return merge(message, {channelId: channelId, creation: creation});
+      return merge(message, {channelId: channelId, creationForId: creation,lastModified:'never',alive: true});
     },
 
     // Renvoie un tableau de messages à partir de l'id du channel passé en paramètre
@@ -166,6 +168,25 @@ module.exports = {
         }catch (e) {
             return (e);
         }
+    },
+
+    update: async (message) => {
+
+      if(!message.author) throw Error('Invalid message no author');
+      if(!message.content) throw Error('Invalid message no content');
+
+      const channelId = message.channelId;
+      const creation = message.creationForId;
+
+      await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
+        author: message.author,
+        content: message.content,
+        creation: message.creation,
+        alive: message.alive,
+        lastModified: Date.now()
+      }));
+
+      return merge(message, {channelId: channelId, creationForId: creation,lastModified:'never',alive: true});
     },
 
   },

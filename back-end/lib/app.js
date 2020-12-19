@@ -169,6 +169,11 @@ app.delete('/channels/:id/messages/:creaId', async (req, res) => {
   res.status(201).json(data);
 });
 
+app.put('/channels/:id/messages/:creaId', async (req, res) => {
+  const data = await db.messages.update(req.body);
+  res.status(201).json(data);
+});
+
 
 //____________________________________________________________________
 // USERS

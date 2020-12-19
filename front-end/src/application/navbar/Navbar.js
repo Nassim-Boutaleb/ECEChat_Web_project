@@ -30,6 +30,11 @@ const styles = {
 // setChannels = MAJ des channels
 // currentChannel = index du currentChannel
 const Navbar = ({handleDrawerOpen,userConnected,channels,setChannels,currentChannel,setCurrentChannel}) => {
+    
+  // ici : useEffect rechargé à chaque CurrentChannel qui regarde le rôle de userConnected
+  // 0 user 1 admin 2 createru
+  
+  
     return (
         <div style={styles.root}>
           <AppBar position="static" style={styles.navbar}>

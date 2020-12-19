@@ -30,6 +30,9 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
     // Un message est du type {author:"sergei",creation:"556",content:blablabla}
     const [messages, setMessages] = useState([]);
 
+    // L'utilisateur connecté est-il créateur du channel ?
+    const [isCreator,setCreator] = useState('false');
+
     // UseEffect (React hook)
     // On récupère en BDD la liste des messages du channel
     // UseEffect est appellée juste après le 1er render et va aller chercher en BDD la liste
@@ -63,9 +66,9 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
 
             // appel à l'api
             const usernameAuthor = await api.getUsernameFromId(idAuthor);
-            console.log ("length: "+usernameAuthor.length);
+          
             // Réassocier toutes les données du message avec les nouvelles données
-            const messagesWithAuthorUsername =[]
+            const messagesWithAuthorUsername =[];
             for (let i=0; i<usernameAuthor.length; ++i) {
                 messagesWithAuthorUsername.push ({
                     author: messagesGet[i].author,
@@ -74,7 +77,9 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
                     content: messagesGet[i].content,
                     creation: messagesGet[i].creation,
                     channelId: messagesGet[i].channelId,
-                    creationForId: messagesGet[i].creationForId
+                    creationForId: messagesGet[i].creationForId,
+                    alive: messagesGet[i].alive,
+                    lastModified: messagesGet[i].lastModified,
                 })
             }
             console.log ("les messages de "+channel.name+"= "+JSON.stringify(messagesWithAuthorUsername));
@@ -83,10 +88,17 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
         else {
             setMessages ([]);
         }
+        
+        //3. Regarder si on est le créateur du channel ou pas ?
+        if (userConnected.id === channel.creatorId) {
+            setCreator('true');
+        }
+        
+
         setLoading(false);
     }
     if (isLoading) {
-        console.log ("isLoading: "+channel.id);
+        console.log ("isLoading: "+channel.id+'is creator: '+isCreator);
         getMessages();
         return <div className="App">Loading...</div>;
     }
@@ -100,11 +112,7 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
         // messages [[{M1},{M2}],{NM}]
     };
 
-    // TEST
-    const getAllMessagesTest = async () => {
-        
-        
-    }
+    
 
     
     // Messages = la liste des messages déjà écrits dans le channel
@@ -118,13 +126,14 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
                     messages={messages}
                     channel = {channel}
                     userConnected = {userConnected}
+                    setMessages={setMessages}
+                    isCreator={isCreator}
                 />
                 <MessageForm 
                     addMessage={addMessage}
                     userConnected = {userConnected}
                     currentChannel = {channel}
                 />
-                <button onClick={getAllMessagesTest}>TEST MESSAGES</button>
         </div>
     );
 };
