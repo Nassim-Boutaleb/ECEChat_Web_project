@@ -236,6 +236,9 @@ const deleteChannelMessages = async (channelId) => {
     return data;
 }
 
+// Cette f° supprime un channel en BDD à partir de son ID
+// En paramètre : l'id du channel en question)
+// Retourne : message d'erreur ou de succès
 const deleteChannel = async (channelId) => {
      // Récupérer token
      const token = localStorage.getItem('token');
@@ -251,6 +254,12 @@ const deleteChannel = async (channelId) => {
      return data;
 }
 
+// Cette fonction déconnecte l'utilisteur en supprimant le token stocké dans localStorage
+const logout = () => {
+    localStorage.clear();
+    window.location ="/";
+} 
+
 export default {
     apiSignup,
     apiLogin,
@@ -265,6 +274,7 @@ export default {
     updateChannel,
     getUsernameFromId,
     deleteChannelMessages,
-    deleteChannel
+    deleteChannel,
+    logout
     
 };

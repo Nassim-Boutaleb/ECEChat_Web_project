@@ -3,6 +3,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import api from './../../api'
 
 
 const styles = {
@@ -35,9 +36,16 @@ const ManageAccount = ({userConnected}) => {
     const isMenuOpen = Boolean(anchorEl);
 //____________________________________________________
     // Gestion du sous-menu modifier les données utilisateur
-    
 
-//____________________________________________________
+
+//_________________________________________________________
+    // Gestion de la déconnexion
+    const logout = () => {
+        handleMenuClose();
+        api.logout();
+    }
+
+//_____________________________________________________________
 
     // Le menu
     const renderMenu = (
@@ -51,7 +59,7 @@ const ManageAccount = ({userConnected}) => {
           onClose={handleMenuClose}
         >
           <MenuItem onClick={handleMenuClose}>Modifier mes informations personnelles</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Déconnexion</MenuItem>
+          <MenuItem onClick={logout}>Déconnexion</MenuItem>
         </Menu>
     );
     
