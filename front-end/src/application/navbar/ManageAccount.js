@@ -16,12 +16,10 @@ const styles = {
     title: {
       flexGrow: 1,
     },
-    navbar : {
-        backgroundColor: 'purple'
-    }
+    
   };
 
-const ManageAccount = () => {
+const ManageAccount = ({userConnected}) => {
     
     // Gestion du menu
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -36,7 +34,10 @@ const ManageAccount = () => {
     
     const isMenuOpen = Boolean(anchorEl);
 //____________________________________________________
-    // ... 
+    // Gestion du sous-menu modifier les données utilisateur
+    
+
+//____________________________________________________
 
     // Le menu
     const renderMenu = (
@@ -50,7 +51,7 @@ const ManageAccount = () => {
           onClose={handleMenuClose}
         >
           <MenuItem onClick={handleMenuClose}>Modifier mes informations personnelles</MenuItem>
-          <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+          <MenuItem onClick={handleMenuClose}>Déconnexion</MenuItem>
         </Menu>
     );
     

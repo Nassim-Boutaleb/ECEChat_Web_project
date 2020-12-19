@@ -6,6 +6,8 @@ const level = require('level')
 const db = level(__dirname + '/../db')
 
 module.exports = {
+  
+  
   channels: {
     
     //Creation d'un channel en BDD
@@ -80,10 +82,13 @@ module.exports = {
 
     },
 
-    delete: (id, channel) => {
-      const original = store.channels[id]
-      if(!original) throw Error('Unregistered channel id')
-      delete store.channels[id]
+    delete: async (id) => {
+        try {
+          await db.del(`channels:${id}`);
+          return `channel ${id} delete with success`;
+        }catch (e) {
+          return e;
+        }
     }
   },
 
@@ -96,16 +101,22 @@ module.exports = {
     // et message objet de forme {author:"david","content":"bonjour"}
     create: async (channelId, message) => {
       console.log ("DB create message: "+JSON.stringify(message)+" "+message.author);
-      if(!channelId) throw Error('Invalid channel')
-      if(!message.author) throw Error('Invalid message no author')
-      if(!message.content) throw Error('Invalid message no content')
-      creation = microtime.now() // date de création du message (instant actuel)
+
+      if(!channelId) throw Error('Invalid channel');
+      if(!message.author) throw Error('Invalid message no author');
+      if(!message.content) throw Error('Invalid message no content');
+
+      creation = microtime.now(); // date de création du message (instant actuel)
+      // Un message est identifié par son channelId et sa date de création qui doit donc
+      // être la + précise possible 
+
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
         content: message.content,
-        creation: message.creation
-      }))
-      return merge(message, {channelId: channelId, creation: creation})
+        creation: message.creation,
+      }));
+
+      return merge(message, {channelId: channelId, creation: creation});
     },
 
     // Renvoie un tableau de messages à partir de l'id du channel passé en paramètre
@@ -116,12 +127,14 @@ module.exports = {
         db.createReadStream({
           gt: `messages:${channelId}:`,
           lte: `messages:${channelId}` + String.fromCharCode(":".charCodeAt(0) + 1),
+
         }).on( 'data', ({key, value}) => {
           message = JSON.parse(value); // Le message, objet de type {author:'XXX',content:'blabla'}
           const [, channelId, creation] = key.split(':') // 3 parties de la clé: '"messages"','$channelId','$creation'
           message.channelId = channelId;
-          //message.creation = creation;
+          message.creationForId = creation;
           messages.push(message);
+
         }).on( 'error', (err) => {
           reject(err);
         }).on( 'end', () => {
@@ -129,6 +142,27 @@ module.exports = {
         })
       })
     },
+
+    deleteAll: async (channelId) =>  {
+        return new Promise( (resolve, reject) => {
+
+            db.createReadStream({
+                gt: `messages:${channelId}:`,
+                lte: `messages:${channelId}` + String.fromCharCode(":".charCodeAt(0) + 1),
+            }).on( 'data', ({key, value}) => {
+                db.del(key);
+            }).on( 'error', (err) => {
+                reject(err);
+            }).on( 'end', () => {
+                resolve("messages successfully deleted");
+            })
+        })
+    },
+
+    delete: async (channelId) =>  {
+      
+    },
+
   },
 
 //_________________________________________________________________________________________

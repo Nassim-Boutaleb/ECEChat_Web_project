@@ -5,6 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import ChannelNameManager from './ChannelNameManager'
 import ChannelUsersManager from './ChannelUsersManager'
+import ChannelDeleteAlert from './ChannelDeleteAlert'
 import api from '../../api';
 
 const styles = {
@@ -15,8 +16,8 @@ const styles = {
     
   };
 
-const ManageChannel = ({channels,setChannels,currentChannel}) => {
-    // Gestion du menu
+const ManageChannel = ({channels,setChannels,currentChannel,setCurrentChannel}) => {
+    // Gestion du menu itself
     const [anchorEl, setAnchorEl] = React.useState(null);
     
     const handleProfileMenuOpen = (event) => {
@@ -30,7 +31,7 @@ const ManageChannel = ({channels,setChannels,currentChannel}) => {
     const isMenuOpen = Boolean(anchorEl);
 
 //_______________________________________________
-    // Gestion menu nom du channel
+    // Gestion sous-menu nom du channel
     const [ChannelNameOpen, setChannelNameOpen] = React.useState(false);
 
     const handleChannelNameOpen = () => {
@@ -43,7 +44,7 @@ const ManageChannel = ({channels,setChannels,currentChannel}) => {
     };
 
 //________________________________________________________
-    //Gestion menu des permissions utilisateurs
+    //Gestion sous-menu des permissions utilisateurs
 
     const [ChannelUsersOpen, setChannelUsersOpen] = React.useState(false);
 
@@ -57,7 +58,21 @@ const ManageChannel = ({channels,setChannels,currentChannel}) => {
     };
 
 //__________________________________________________________
-    
+    // gestion du sous-menu supprimer le channel (uniquement le créateur)
+    const [ChannelDeleteOpen, setChannelDeleteOpen] = React.useState(false);
+
+    const handleChannelDeleteOpen = () => {
+        setChannelDeleteOpen(true);
+        handleMenuClose();
+    };
+
+    const handleChannelDeleteClose = () => {
+        setChannelDeleteOpen(false);
+    };
+
+//_________________________________________________________________
+
+    // Affichage menu
     const renderMenu = (
         <Menu
           anchorEl={anchorEl}
@@ -84,7 +99,15 @@ const ManageChannel = ({channels,setChannels,currentChannel}) => {
                         setChannels= {setChannels}
                         currentChannel={currentChannel}
                 />
-            <MenuItem onClick={handleMenuClose}>Supprimer le channel/Quitter le channel</MenuItem>
+            <MenuItem onClick={handleChannelDeleteOpen}>Supprimer le channel/Quitter le channel</MenuItem>
+                <ChannelDeleteAlert
+                        open={ChannelDeleteOpen}
+                        handleClose={handleChannelDeleteClose}
+                        channels= {channels}
+                        setChannels= {setChannels}
+                        currentChannel={currentChannel}
+                        setCurrentChannel={setCurrentChannel}
+                />
         </Menu>
     );
     

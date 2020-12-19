@@ -217,6 +217,40 @@ const getUsernameFromId = async (userListId) => {
     return userIdUsername;
 }
 
+// Cette fonction supprime en BDD tous les messages d'un channel donné
+// En paramètre : l'id du channel en question)
+// Retourne : message d'erreur ou de succès
+const deleteChannelMessages = async (channelId) => {
+
+    // Récupérer token
+    const token = localStorage.getItem('token');
+
+    //2. appel axios
+    const {data} = await axios.delete (`${url}/channels/${channelId}/messages`,
+    {
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    }); 
+    
+    return data;
+}
+
+const deleteChannel = async (channelId) => {
+     // Récupérer token
+     const token = localStorage.getItem('token');
+
+     //2. appel axios
+     const {data} = await axios.delete (`${url}/channels/${channelId}`,
+     {
+         headers : {
+             'authorization' :   'Bearer ' + token
+         }
+     }); 
+     
+     return data;
+}
+
 export default {
     apiSignup,
     apiLogin,
@@ -229,6 +263,8 @@ export default {
     getMessages,
     addMessageDB,
     updateChannel,
-    getUsernameFromId
+    getUsernameFromId,
+    deleteChannelMessages,
+    deleteChannel
     
 };

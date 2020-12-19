@@ -29,7 +29,7 @@ const styles = {
 // channels = tableau contenant la liste des channels
 // setChannels = MAJ des channels
 // currentChannel = index du currentChannel
-const Navbar = ({handleDrawerOpen,userConnected,channels,setChannels,currentChannel}) => {
+const Navbar = ({handleDrawerOpen,userConnected,channels,setChannels,currentChannel,setCurrentChannel}) => {
     return (
         <div style={styles.root}>
           <AppBar position="static" style={styles.navbar}>
@@ -38,9 +38,9 @@ const Navbar = ({handleDrawerOpen,userConnected,channels,setChannels,currentChan
                 <MenuIcon />
               </IconButton>
               <span style={styles.title}> </span>  {/*Un espace qui grossit automatiquement */}
-              <ManageChannel channels={channels} setChannels={setChannels} currentChannel={currentChannel}/>
+              <ManageChannel channels={channels} setChannels={setChannels} currentChannel={currentChannel} setCurrentChannel={setCurrentChannel}/>
               <span style={styles.title}> </span> 
-              <ManageAccount/>
+              <ManageAccount userConnected={userConnected}/>
             </Toolbar>
           </AppBar>
         </div>

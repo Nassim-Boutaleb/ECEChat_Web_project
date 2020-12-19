@@ -77,6 +77,7 @@ const MainPage = () => {
               channels={channels}
               setChannels={setChannels}
               currentChannel={currentChannel}
+              setCurrentChannel={setCurrentChannel}
             />
 
             <Main 

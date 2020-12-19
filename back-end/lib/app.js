@@ -121,15 +121,23 @@ app.get('/channels/:id', async (req, res) => {
 // Met a jour le channel désigné par son id
 // En paramètres: l'id du channel à mettre à jour et le contenu du nouveau channel sous forme d'objet
 // Renvoie le channel mis à jour
-// TODO
 app.put('/channels/:id', async (req, res) => {
   const channel = await db.channels.update(req.params.id,req.body);
   res.json(channel);
 });
 
-//______________________________________________________________
+//Supprime le channel désigné
+// N'effectue pas la suppression des messages, elle doit être faite séparément avant
+// En paramètre url: l'id du channel à supprimer
+app.delete('/channels/:id', async (req, res) => {
+  const data = await db.channels.delete(req.params.id);
+  res.status(201).json(data);
+});
 
-// Messages
+//______________________________________________________________
+// MESSAGES
+
+
 // Renvoie les messages d'un channel à partir de l'id du channel
 // paramètre url : id du channel 
 // retourne: tableau de messages dy type: 
@@ -148,9 +156,16 @@ app.post('/channels/:id/messages', async (req, res) => {
   res.status(201).json(message);
 });
 
-//____________________________________________________________________
+// Supprime l'ensemble des messages du channel désigné par son id
+// Reçoit en paramètre URL l'id du channel dont on veut supprimer les messages
+app.delete('/channels/:id/messages', async (req, res) => {
+  const data = await db.messages.deleteAll(req.params.id);
+  res.status(201).json(data);
+});
 
-// Users
+
+//____________________________________________________________________
+// USERS
 
 // Lister l'ensemble des utilisateurs stockés dans la BDD
 // Ne reçoit rien en paramètres dans req
