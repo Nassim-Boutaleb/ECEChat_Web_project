@@ -23,7 +23,7 @@ const styles = {
 
 // Composant Channel sous forme de fonction avec 1 prop channel qui contient 1 objet channel
 // (le channel choisi). A partir de ce channel il ira chercher la liste des messages
-const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
+const Channel =  ({channel,userConnected,currentChannel}) => {
     
 
     // Etat messages qui contient un tableau de messages [{M1},{M2}]
@@ -33,20 +33,6 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
     // L'utilisateur connecté est-il créateur du channel ?
     const [isCreator,setCreator] = useState('false');
 
-    // UseEffect (React hook)
-    // On récupère en BDD la liste des messages du channel
-    // UseEffect est appellée juste après le 1er render et va aller chercher en BDD la liste
-    // des messages du channel puis appeller setMessages, ce qui déclenche donc un nouvel
-    // appel automatique de render()
-    /*useEffect( () => {
-        const getMessagesFcn = async () => {
-            const m= await api.getMessages(channel.id);  // tableau de messages [{M1},{M2}]
-            return m;
-        }
-        const messagesGet = getMessagesFcn(); //await api.getMessages(channel.id); //getMessagesFcn();
-        console.log ("Front: messagesGet Channel: "+JSON.stringify(messagesGet));
-        setMessages (messagesGet);
-    });*/ // [] <=> useEffect sera appellée 1 seule fois, au chargement du composant uniquement et pas après chaque mise a jour
     
     const getMessages = async () => {
         // 1. on récupère en BDD un tableau de la forme 
@@ -94,14 +80,14 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
             setCreator('true');
         }
         
+    }
 
-        setLoading(false);
-    }
-    if (isLoading) {
-        console.log ("isLoading: "+channel.id+'is creator: '+isCreator);
+    useEffect(()=> {
         getMessages();
-        return <div className="App">Loading...</div>;
-    }
+        console.log ("Use Effect");
+    },[currentChannel]);
+
+    
 
     // Fonction d'ajout de message. paramètre le nouveau message
     const addMessage = (message) => {  // paramètre: un objet message de tye {author:B,creation:C,content:X}

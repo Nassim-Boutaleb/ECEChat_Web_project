@@ -115,11 +115,23 @@ app.get('/channels/:id', async (req, res) => {
   const channel = await db.channels.get(req.params.id);
 
   // Vérifier que j'ai le droit d'accéder à ce channel <=> je suis son créateur ou un utilisateur/admin
-  /*for () {
+  let droit = false;
+  for (let i=0; i<channel.idUsers.length ; ++i) {
+      if (channel.idUsers[i].id === res.locals.userId) {
+        droit = true;
+      }
+  }
+  if (channel.creatorId === res.locals.userId) {
+      droit = true;
+  }
 
-  }*/
+  if (droit === true) {
+      res.status(200).json(channel);
+  }
+  else {
+      res.status(403).json("Non autorisé à accéder à ce channel");
+  }
 
-  res.json(channel);
 });
 
 // Met a jour le channel désigné par son id
@@ -134,8 +146,19 @@ app.put('/channels/:id', async (req, res) => {
 // N'effectue pas la suppression des messages, elle doit être faite séparément avant
 // En paramètre url: l'id du channel à supprimer
 app.delete('/channels/:id', async (req, res) => {
-  const data = await db.channels.delete(req.params.id);
-  res.status(201).json(data);
+  // Il faut d'abord vérifier si on a le droit de modifier un channel
+  // seul le créateur du channel peut le faire
+  // 1) On récupère les données du channel à partir de son id
+  const channel = await db.channels.get(req.params.id);
+
+  //2) Regarder si on est bien le créateur
+  if (channel.creatorId === res.locals.userId) {
+      const data = await db.channels.delete(req.params.id);
+      res.status(201).json(data);
+  }
+  else {
+      res.status(403).json("Unauthorized to delete channel !");
+  }
 });
 
 //______________________________________________________________

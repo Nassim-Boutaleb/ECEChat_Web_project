@@ -108,7 +108,7 @@ const ManageChannel = ({channels,setChannels,currentChannel,setCurrentChannel,us
             }
         }
     },[currentChannel,channels]);
-    console.log ("Authorization: "+authorization+" channel : "+channels[currentChannel].name);
+    //console.log ("Authorization: "+authorization+" channel : "+channels[currentChannel].name);
 
     // Affichage menu
     const renderMenu = (

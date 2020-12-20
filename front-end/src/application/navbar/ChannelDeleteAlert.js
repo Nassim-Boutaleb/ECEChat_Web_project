@@ -11,6 +11,7 @@ const ChannelDeleteAlert = ({open,handleClose,channels,setChannels,currentChanne
 
     const handleDelete = async() => {
         //1. Récupérer le channel ID
+        console.log ("DELCUCH: "+currentChannel);
         const channelToDelete = channels[currentChannel];
         const channelId = channelToDelete.id;
         
@@ -25,8 +26,8 @@ const ChannelDeleteAlert = ({open,handleClose,channels,setChannels,currentChanne
         //4. Mettre a jour le tableau de channels + reRender
         const copyChannels = channels.slice();
         copyChannels.splice(currentChannel,1);
-        setChannels(copyChannels);
         setCurrentChannel(0);
+        setChannels(copyChannels);
 
         handleClose();
     }

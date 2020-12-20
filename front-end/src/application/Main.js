@@ -25,8 +25,7 @@ const styles = {
 // handleDrawerClose = f° pr fermer le drawer 
 const Main =  ({open,handleDrawerClose,channels,setChannels,currentChannel,setCurrentChannel,userConnected,setUserConnected}) => {
     
-    // Gestion du loading du composant channel
-    const [channelIsLoading, setChannelLoading] = useState(true);
+
 
 
     // Channels: composant qui contient la liste des channels
@@ -46,7 +45,6 @@ const Main =  ({open,handleDrawerClose,channels,setChannels,currentChannel,setCu
                     setCurrentChannel={setCurrentChannel}
                     channels={channels}
                     setChannels={setChannels}
-                    setChannelLoading = {setChannelLoading}
                 />
             </Drawer>
             {
@@ -54,8 +52,7 @@ const Main =  ({open,handleDrawerClose,channels,setChannels,currentChannel,setCu
                 <Channel 
                     channel={channels[currentChannel]}
                     userConnected = {userConnected}
-                    isLoading = {channelIsLoading}
-                    setLoading = {setChannelLoading}
+                    currentChannel={currentChannel}
                 /> /**On passe le channel choisi à channel */
                 : <div> Aucun channel pour votre compte ! Créez un channel avec +</div>
             }     

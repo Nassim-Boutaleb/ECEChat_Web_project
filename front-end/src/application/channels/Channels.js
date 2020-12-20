@@ -22,7 +22,7 @@ const styles = {
 // Composant Channels sous forme de fonction
 // Reçoit en prop la liste des channels du user connecté et une réf sur la fonction permettant de modifier 
 // le channel courant
-const Channels =  ({setCurrentChannel,channels,setChannels,setChannelLoading}) => {
+const Channels =  ({setCurrentChannel,channels,setChannels}) => {
     
     //console.log ("AffChannelsEnd??: "+JSON.stringify(channels));
     return (
@@ -35,8 +35,7 @@ const Channels =  ({setCurrentChannel,channels,setChannels,setChannelLoading}) =
                             key={it.id}
                             index={index}
                             setCurrentChannel={setCurrentChannel}
-                            name={it.name} 
-                            setChannelLoading = {setChannelLoading}  
+                            name={it.name}  
                         />
                     ))
                 }
