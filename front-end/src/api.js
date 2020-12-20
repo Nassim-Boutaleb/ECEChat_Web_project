@@ -329,6 +329,31 @@ const updateUser = async (updatedUser,userId) => {
     return data;
 }
 
+// Cette fonction supprime l'utilisateur connecté (par son token) du channel actuel
+// et retourne le nouveau channel sans l'utilisateur
+const deleteUserFromChanel = async (channelId,channel) => {
+    //1. récupérer les données de l'utilisateur connecté via son token
+    const user = await getUser();
+
+    //2. Parcourir le tableau des utilisateurs du channel et supprimer
+    let index = null;
+    for (let i=0; i<channel.idUsers.length; ++i) {
+        if (channel.idUsers[i].id === user.id ) {
+            index = i;
+        }
+    }
+    if (index != null){
+        channel.idUsers.splice (index,1);
+    }
+
+    //3. Mettre a jour le channel en BDD
+    const data = updateChannel (channel);
+
+    //4. retourner le channel
+    return channel;
+    
+}
+
 // Cette fonction déconnecte l'utilisteur en supprimant le token stocké dans localStorage
 const logout = () => {
     localStorage.clear();
@@ -353,6 +378,7 @@ export default {
     logout,
     deleteMessage,
     modifyMessageContent,
-    updateUser
+    updateUser,
+    deleteUserFromChanel
     
 };

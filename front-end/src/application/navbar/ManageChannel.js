@@ -6,7 +6,7 @@ import Menu from '@material-ui/core/Menu';
 import ChannelNameManager from './ChannelNameManager'
 import ChannelUsersManager from './ChannelUsersManager'
 import ChannelDeleteAlert from './ChannelDeleteAlert'
-import api from '../../api';
+import ChannelLeaveAlert from './ChannelLeaveAlert'
 
 const styles = {
     wrapper: {
@@ -68,6 +68,19 @@ const ManageChannel = ({channels,setChannels,currentChannel,setCurrentChannel,us
 
     const handleChannelDeleteClose = () => {
         setChannelDeleteOpen(false);
+    };
+
+//_______________________________________________________________
+    // Gestion du sous menu quitter le channel
+    const [ChannelLeaveOpen, setChannelLeaveOpen] = React.useState(false);
+
+    const handleChannelLeaveOpen = () => {
+        setChannelLeaveOpen(true);
+        handleMenuClose();
+    };
+
+    const handleChannelLeaveClose = () => {
+        setChannelLeaveOpen(false);
     };
 
 //_________________________________________________________________
@@ -134,10 +147,10 @@ const ManageChannel = ({channels,setChannels,currentChannel,setCurrentChannel,us
                         currentChannel={currentChannel}
                         setCurrentChannel={setCurrentChannel}
                 />
-            {authorization < 2 && <MenuItem onClick={handleChannelDeleteOpen}>Quitter le channel</MenuItem> }
-                <ChannelDeleteAlert
-                        open={ChannelDeleteOpen}
-                        handleClose={handleChannelDeleteClose}
+            {authorization < 2 && <MenuItem onClick={handleChannelLeaveOpen}>Quitter le channel</MenuItem> }
+                <ChannelLeaveAlert
+                        open={ChannelLeaveOpen}
+                        handleClose={handleChannelLeaveClose}
                         channels= {channels}
                         setChannels= {setChannels}
                         currentChannel={currentChannel}
