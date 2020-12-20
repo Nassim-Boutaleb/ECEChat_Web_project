@@ -16,7 +16,7 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
     const [password,setPassword] = useState(''); // Le mot de passe controlé par formulaire
     const [oldPassword,setOldPassword] = useState('');  // Le mot de passe do'origine sauvegardé
     const [email,setEmail] = useState('');
-    const [gender,setGender] = useState('');
+    const [avatarPreference,setAvatarPreference] = useState('');
     const [profileImageNoGravatar,setProfileImageNoGravatar] = useState('');
     const [id,setId] = useState();
     const [useEffectReload,setUseEffectReload] = useState (false);
@@ -33,6 +33,7 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
             email: email,
             password: password,
             profileImageNoGravatar : profileImageNoGravatar,
+            avatarPreference: avatarPreference
         }
 
         //1b) Faut il encrypter le nouveau mdp ou a t'on gardé l'ancien ?
@@ -106,6 +107,7 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
             setOldPassword(userActual.password);
             setEmail(userActual.email);
             setProfileImageNoGravatar(userActual.profileImageNoGravatar);
+            setAvatarPreference(userActual.avatarPreference);
             setId (userActual.id);
             setChecked(false);
             setErrorEmail(false);
