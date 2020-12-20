@@ -71,6 +71,8 @@ const MessageForm = ({addMessage,userConnected,currentChannel}) => {
         // Pour affichage du username
         mbdd.authorUsername = userConnected.username;
         mbdd.authorEmail = userConnected.email;
+        mbdd.avatarPreference = userConnected.avatarPreference;
+        mbdd.profileImageNoGravatar = userConnected.profileImageNoGravatar;
         addMessage(mbdd,currentChannel.id); 
     } 
     return (
