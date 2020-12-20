@@ -219,7 +219,13 @@ const getUsernameFromId = async (userListId) => {
     for (let i=0; i<userListId.length; ++i) {
         for (let j=0; j<data.length;++j) {
             if (userListId[i] === data[j].id) {
-                userIdUsername.push ({id:userListId[i],userName: data[j].username,email: data[j].email });
+                userIdUsername.push ({
+                    id:userListId[i],
+                    userName: data[j].username,
+                    email: data[j].email,
+                    avatarPreference: data[j].avatarPreference,
+                    profileImageNoGravatar: data[j].profileImageNoGravatar
+                });
             }
         }
     }

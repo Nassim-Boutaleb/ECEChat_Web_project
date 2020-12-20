@@ -93,6 +93,7 @@ const Messages =  ({messages,channel,userConnected,setMessages,isCreator}) => {
                         isCreator={isCreator}
                         handleModifyMessage={handleModifyMessage}
                         channel={channel}
+                        userConnected={userConnected}
                     />
                 ))}
             </ul>

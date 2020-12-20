@@ -13,7 +13,8 @@ const uploadAction = async (image) => {
     try {
         //const res = await axios.post(API_URL + 'api/images', fd, config);
         const res = await axios.post(`${url}/Image`, fd, config);
-        console.log(res.data);
+        return res.data;
+
     } catch (err){
         console.log(err);
     }

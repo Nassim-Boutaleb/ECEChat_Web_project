@@ -28,7 +28,7 @@ const ImageContainer = ({newImage}) => {
         //return API_URl + image;
         return image;
     }
-        console.log(images);
+        
 
     return (
         <div>

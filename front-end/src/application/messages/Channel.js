@@ -66,6 +66,8 @@ const Channel =  ({channel,userConnected,currentChannel}) => {
                     creationForId: messagesGet[i].creationForId,
                     alive: messagesGet[i].alive,
                     lastModified: messagesGet[i].lastModified,
+                    avatarPreference:usernameAuthor[i].avatarPreference,
+                    profileImageNoGravatar: usernameAuthor[i].profileImageNoGravatar
                 })
             }
             //console.log ("les messages de "+channel.name+"= "+JSON.stringify(messagesWithAuthorUsername));

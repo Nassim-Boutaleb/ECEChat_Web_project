@@ -75,7 +75,18 @@ const MessageForm = ({addMessage,userConnected,currentChannel}) => {
     } 
     return (
         <form style={styles.form}  onSubmit={onSubmit}>
-            <img src={ChatGravatar(userConnected.email)} /> 
+            {
+                userConnected.avatarPreference === 'gravatarRd' &&
+                <img src={ChatGravatar(userConnected.email)}  width='60px' height='60px'/> 
+            }
+            {
+                userConnected.avatarPreference === 'defaultRd' &&
+                <img src={require(`./../../login${userConnected.profileImageNoGravatar}.jpg`) } width='60px' height='60px'/>
+            }
+            {
+                userConnected.avatarPreference === 'uploadOwnRd' &&
+                <img src={require(`./../../Images/${userConnected.profileImageNoGravatar}`) } width='60px' height='60px'/>
+            } 
             <input type="text" name="content" style={styles.content} />
             <input type="submit" value="Send" style={styles.send} />
         </form>

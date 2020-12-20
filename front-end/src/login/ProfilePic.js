@@ -39,7 +39,7 @@ class ProfilePic extends Component {
         })
     return (
         <div className="ProfilePic">
-            <Button type="primary" onClick={this.showModal}>
+            <Button type="primary" onClick={this.showModal} disabled={this.props.disabled}>
                 Pic Avatar if no gravatar
             </Button>
             <Modal

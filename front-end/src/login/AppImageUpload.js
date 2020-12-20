@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import ImageContainer from './ImageContainer';
 import ImageForm from './ImageForm';
 
-const AppImageUpload = () => {
+const AppImageUpload = ({disabled,setpathOwn}) => {
     const [ newImage, setNewImage ] = useState([]);
     const handleNewImage = () => {
         setNewImage([...newImage, 'Nouvelle Image']);
@@ -10,7 +10,7 @@ const AppImageUpload = () => {
     return (
         <div>
             <ImageContainer newImage={newImage} />
-            <ImageForm handleNewImage={handleNewImage} />
+            <ImageForm handleNewImage={handleNewImage} disabled={disabled} setpathOwn={setpathOwn} />
         </div>
     );
 }

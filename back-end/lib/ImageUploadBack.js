@@ -3,13 +3,15 @@ const path = require("path");
 const multer = require("multer");
 const fs = require('fs');
 const router = express.Router();
+const {v4: uuid} = require('uuid')
 
 const storage = multer.diskStorage({
    destination: function(req, res , cb) {
-      cb(null, './Image')
+      cb(null, './../front-end/src/Images');
    },
    filename: function(req,file, cb){
-      cb(null,'customImage.png')
+      const id = uuid();
+      cb(null,`customImage${id}.png`);
    }
 })
 

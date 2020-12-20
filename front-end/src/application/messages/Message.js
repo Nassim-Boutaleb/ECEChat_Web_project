@@ -3,7 +3,7 @@ import moment from 'moment'
 import ChatGravatar from '../Gravatar';
 import IconButton from '@material-ui/core/IconButton';
 import MessageManager from './MessageManager'
-import img from './../../login/pics/Image1.png'
+
 
 const styles = {
     messageFromMe: {
@@ -83,7 +83,7 @@ const Nl2br = message => (
 // Composant message qui contient un message individuel. Une prop = le message à afficher
 // de forme  {"author":"47","authorUsername":"T9","authorEmail":"test@mail.com","content":"C3 1","creation":1608381214566,"channelId":"3b","creationForId":"1608381214579429"}
 
-const Message = ({message,me,index,handleDeleteMessage,isCreator,handleModifyMessage,channel}) => {
+const Message = ({message,me,index,handleDeleteMessage,isCreator,handleModifyMessage,channel,userConnected}) => {
     
     moment.locale('fr', {
         months : 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split('_'),
@@ -164,8 +164,18 @@ const Message = ({message,me,index,handleDeleteMessage,isCreator,handleModifyMes
             <div style={!alive ? styles.messageDeleted : me ? styles.messageFromMe : styles.messageFromAnother}>
                 <p>
                     <span>{message.authorUsername}</span>
-                    <img src={ChatGravatar(message.authorEmail)}  width='30px'/> 
-                    {/**<img src={require('./../../login/pics/Image1.png') } width='30px'/>*/}
+                    {
+                        message.avatarPreference === 'gravatarRd' &&
+                        <img src={ChatGravatar(message.authorEmail)}  width='30px'/> 
+                    }
+                    {
+                        message.avatarPreference === 'defaultRd' &&
+                        <img src={require(`./../../login${message.profileImageNoGravatar}.jpg`) } width='30px'/>
+                    }
+                    {
+                        message.avatarPreference === 'uploadOwnRd' &&
+                        <img src={require(`./../../Images/${message.profileImageNoGravatar}`) } width='30px'/>
+                    }
                     {' '}
                     <span>{date}</span>
                     {message.lastModified !== 'never' && <p>Modifié {dateMod}</p> }

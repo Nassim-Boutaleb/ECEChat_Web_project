@@ -16,14 +16,17 @@ app.get('/', (req, res) => {
   ].join(''))
 });
 
+/** Upload d'image */
 const uploads = require ('./ImageUploadBack');
+
 app.get('/Image', (req,res) => {
   console.log('serijtfdgyfthugyft');
 });
+
 app.post('/Image',uploads.single('image'),async(req,res) => {
   console.log("L'image est push")
   const image = req.file.path;
-  res.json({ msg: 'Image est crée'})
+  res.status(200).json(image);
 });
 
 // Channels
@@ -403,38 +406,44 @@ app.post('/users', async (req, res) => {
   const newEmail = req.body.email;
   console.log ("cred: "+JSON.stringify(req.body));
   // appel à la db pour lister tous les utilisateurs
-  const userList = await db.users.list();
+  try {
+    const userList = await db.users.list();
+    // Vérifier que le username et l'email fournis n'existent pas dejà
+    let usernameExiste = 0; 
+    let emailExiste = 0;
 
-  // Vérifier que le username et l'email fournis n'existent pas dejà
-  let usernameExiste = 0; 
-  let emailExiste = 0;
+    for (let i=0; i<userList.length; ++i) {
+        if (userList[i].username === newUsername) {
+            usernameExiste ++;
+        }
+        if (userList[i].email === newEmail) {
+            emailExiste ++;
+            console.log ("L: "+userList[i].email+" "+newEmail);
+        }
+    }
 
-  for (let i=0; i<userList.length; ++i) {
-      if (userList[i].username === newUsername) {
-          usernameExiste ++;
-      }
-      if (userList[i].email === newEmail) {
-          emailExiste ++;
-          console.log ("L: "+userList[i].email+" "+newEmail);
-      }
+    if (usernameExiste >0) {
+      res.json('2');
+    }
+    else if (emailExiste > 0) {
+      res.json('1');
+    }
+    else {
+      // Crypter le mot de passe
+      var salt = bcrypt.genSaltSync(10);
+      var hashedPwd = bcrypt.hashSync(req.body.password, salt);
+      req.body.password = hashedPwd;
+
+      // Ajouter l'utilisateur en BDD 
+      const user = await db.users.create(req.body);
+      res.status(201).json(user);
+    }
+  }
+  catch (e) {
+    res.status(404).json ("Erreur database: "+e);
   }
 
-  if (usernameExiste >0) {
-    res.json('2');
-  }
-  else if (emailExiste > 0) {
-    res.json('1');
-  }
-  else {
-    // Crypter le mot de passe
-    var salt = bcrypt.genSaltSync(10);
-    var hashedPwd = bcrypt.hashSync(req.body.password, salt);
-    req.body.password = hashedPwd;
-
-    // Ajouter l'utilisateur en BDD 
-    const user = await db.users.create(req.body);
-    res.status(201).json(user);
-  }
+  
 
 });
 
