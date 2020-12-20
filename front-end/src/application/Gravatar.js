@@ -9,7 +9,7 @@ const ChatGravatar = (userEmail) => {
     // récupérer son mail
     var md5 = require('md5');
     var hashGravatar = md5(userEmail);
-    var urlGravatar = "https://s.gravatar.com/avatar/"+hashGravatar+"?s=80";
+    var urlGravatar = "https://s.gravatar.com/avatar/"+hashGravatar+"?s=80&d=mp";
     return urlGravatar;
 }
 

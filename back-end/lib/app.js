@@ -99,14 +99,11 @@ app.get('/allChannels', async (req, res) => {
 
 
 // Crée un channel en base de données 
-// En paramètre: l'objet channel de type {name:"channel 1"}
+// En paramètre: l'objet channel de type {name:"channel 1"} et la liste des utilisateurs
 // Reçoit du middleware d'identification res.locals.userId => id du user qui a créé le channel
 // retourne le channel créé
 app.post('/channels', async (req, res) => {
   const userId = res.locals.userId; // id de l'utilisateur qui a créé le channel
-  console.log ("CreationchannelBACK: "+userId);
-  console.log ("\nCreationchannelBACK-CHANNEL: "+JSON.stringify(req.body.channel));
-  console.log ("\nCreationchannelBACK-USERLIST: "+JSON.stringify(req.body.userList));
   const channel = await db.channels.create(req.body,userId);
   res.status(201).json(channel);
 });
@@ -116,6 +113,12 @@ app.post('/channels', async (req, res) => {
 // Revoie: un channel sous la forme {name:"XYZ"}
 app.get('/channels/:id', async (req, res) => {
   const channel = await db.channels.get(req.params.id);
+
+  // Vérifier que j'ai le droit d'accéder à ce channel <=> je suis son créateur ou un utilisateur/admin
+  /*for () {
+
+  }*/
+
   res.json(channel);
 });
 

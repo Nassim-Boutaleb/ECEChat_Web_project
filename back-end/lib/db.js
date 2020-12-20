@@ -15,7 +15,7 @@ module.exports = {
     // et l'id de l'utilisateur qui a créé le channel (une string)
     // et userList la liste des utilisateurs {id:"tere",username:"MB",status:'utilisateur'}
     create: async ({channel,userList},idUser) => {
-      console.log ("DB create channel: "+JSON.stringify(channel));
+      //console.log ("DB create channel: "+JSON.stringify(channel));
       if(!channel.name) throw Error('Invalid channel');
       if(!idUser) throw Error ('No id provided');
 
@@ -73,11 +73,11 @@ module.exports = {
           creatorId: channel.creatorId
         }));
 
-        console.log ("BDD update channel: "+JSON.stringify({
+        /*console.log ("BDD update channel: "+JSON.stringify({
           name: channel.name,
           idUsers: channel.idUsers,
           creatorId: channel.creatorId
-        }));
+        }));*/
         return merge(channel, {id: id});
 
     },
