@@ -16,11 +16,12 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 // Styles
 const styles = {
     form: {
-        borderTop: '2px solid #373B44',
+        //borderTop: '2px solid #373B44',
         padding: '.5rem',
         display: 'flex',
         color: 'black'
@@ -140,63 +141,54 @@ const Signup = () => {
 
     return (
         <div style={styles.root}>
-        <RadioGroup aria-label="userChoice" name="userChoice" value={radioValue} onChange={handleRadio}>
-                    <FormControlLabel value="gravatarRd" control={<Radio />} label="Utiliser mon gravatar (si pas de gravatar un par défaut sera fourni)" />
-                    <FormControlLabel value="defaultRd" control={<Radio />} label=" Utiliser une image fournie par défaut (cliquer sur Pic Avatar )" />
-                        <ProfilePic handleImageChange={handleImageChange} pic1={Pic1} pic2={Pic2} pic3={Pic3} pic4={Pic4} disabled={radioValue==='defaultRd'?false:true} />
-                    <FormControlLabel value="uploadOwnRd" control={<Radio />} label=" Uploader mon propre avatar" />
-                        <AppImageUpload disabled={radioValue==='uploadOwnRd'?false:true} setpathOwn={setpathOwn} />
-        </RadioGroup>
-             
-               
-        <form style={styles.form}  onSubmit={handleSubmit}>
-            <Avatar size={128} icon="user" src={profileImage}/>
-            Email <input type="text" name="email" style={styles.content} value={email} onChange={handleChange} required />
-            Username <input type="text" name="username" style={styles.content} value={username} onChange={handleChange} required />
-            Password <input type="text" name="password" style={styles.content} value={password} onChange={handleChange} required />
-            <input type="submit" value="Inscription" style={styles.send} />
-        </form>
-        <button onClick={testGetPath} >Get path (TEST)</button>
+            <Card style={styles.card} >
+                <CardContent style={styles.cardContent} > 
+                    <RadioGroup aria-label="userChoice" name="userChoice" value={radioValue} onChange={handleRadio}>
+                        <FormControlLabel value="gravatarRd" control={<Radio />} label="Utiliser mon gravatar (si pas de gravatar un par défaut sera fourni)" />
+                        
+                        <FormControlLabel value="defaultRd" control={<Radio />} label=" Utiliser une image fournie par défaut (cliquer sur Pic Avatar )" />
+                            <ProfilePic handleImageChange={handleImageChange} pic1={Pic1} pic2={Pic2} pic3={Pic3} pic4={Pic4} disabled={radioValue==='defaultRd'?false:true} />
+                            <Avatar size={128} icon="user" src={profileImage}/>
+                        <FormControlLabel value="uploadOwnRd" control={<Radio />} label=" Uploader mon propre avatar" />
+                            <AppImageUpload disabled={radioValue==='uploadOwnRd'?false:true} setpathOwn={setpathOwn} />
+                    </RadioGroup>
+                    <form style={styles.form}  onSubmit={handleSubmit} id="userSubmit">
+                        <TextField style={styles.textFields}
+                            label="Email"
+                            type="email" 
+                            name="email"
+                            value={email} 
+                            onChange={handleChange}
+                            required 
+                        />
+                        <TextField style={styles.textFields}
+                            label="Username"
+                            type="text" 
+                            name="username"
+                            value={username} 
+                            onChange={handleChange}
+                            required
+                        />
+                        <TextField style={styles.textFields}
+                            label="Password"
+                            type="password" 
+                            name="password"
+                            value={password} 
+                            onChange={handleChange}
+                            required
+                        />
+                    </form>
+                </CardContent>
+                <CardActions style={styles.cardContent}>
+                        
+                    <Button type="submit" value="Inscription" style={styles.send} form='userSubmit'>Inscription!</Button>
+                    
+                </CardActions>
+             </Card>
         </div>
     )
 };
 
 export default Signup;
 
-/**
- * return (
-        <div style={styles.root}>
-            <Card style={styles.card} >
-                <CardContent style={styles.cardContent} > 
-                    <TextField style={styles.textFields}
-                        label="Email"
-                        type="text" 
-                        name="email"
-                        value={email} 
-                        onChange={handleChange} 
-                    />
-                    <TextField style={styles.textFields}
-                        label="Username"
-                        type="text" 
-                        name="username"
-                        value={username} 
-                        onChange={handleChange}
-                    />
-                    <TextField style={styles.textFields}
-                        label="Password"
-                        type="text" 
-                        name="password"
-                        value={password} 
-                        onChange={handleChange}
-                    />
-                </CardContent>
-                <CardActions style={styles.cardContent}>
-                    <form style={styles.form}  onSubmit={handleSubmit}>
-                        <input type="submit" value="Inscription" style={styles.send} />
-                    </form>
-                </CardActions>
-             </Card>
-        </div>
-    )
-};
- */
+ 
