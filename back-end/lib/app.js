@@ -5,6 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
 
 app.use(require('body-parser').json());
 app.use(cors());
@@ -216,7 +217,7 @@ app.post('/users/login', async (req, res) => {
             userId = data[i].id;
             userName = data[i].username;
     
-            if (data[i].password === password) {
+            if (bcrypt.compareSync(password,data[i].password)) {
                 passCorrespond ++;
             }
         }
@@ -283,6 +284,11 @@ app.post('/users', async (req, res) => {
     res.json('1');
   }
   else {
+    // Crypter le mot de passe
+    var salt = bcrypt.genSaltSync(10);
+    var hashedPwd = bcrypt.hashSync(req.body.password, salt);
+    req.body.password = hashedPwd;
+
     // Ajouter l'utilisateur en BDD 
     const user = await db.users.create(req.body);
     res.status(201).json(user);
