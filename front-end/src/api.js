@@ -294,7 +294,7 @@ const deleteMessage = async (message,channel,userConnected) => {
         message.content = 'message supprimé par son auteur';
         message.alive = false;
         console.log ("Del mess user: "+token);
-        const {data} = await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,{message,channel},
+        const {data} = await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,message,
         {
             headers : {
                 'authorization' :   'Bearer ' + token
@@ -313,7 +313,7 @@ const modifyMessageContent = async (message,channel) => {
     const token = localStorage.getItem('token');
     const channelId = message.channelId;
 
-    const {data} = await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,{message,channel},
+    const {data} = await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,message,
         {
             headers : {
                 'authorization' :   'Bearer ' + token

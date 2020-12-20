@@ -169,31 +169,136 @@ app.delete('/channels/:id', async (req, res) => {
 // paramètre url : id du channel 
 // retourne: tableau de messages dy type: 
 app.get('/channels/:id/messages', async (req, res) => {
-  const messages = await db.messages.list(req.params.id);
-  console.log ("Back messages get: "+messages);
-  res.json(messages);
+  
+  // Il faut d'abord vérifier si on est autorisé à récupérer les messages du channel
+  // <=> on est membre/créateur du channel
+  try {
+    const channel = await db.channels.get(req.params.id);
+    let droit = false;
+    for (let i=0; i<channel.idUsers.length ; ++i) {
+        if (channel.idUsers[i].id === res.locals.userId) {
+          droit = true;
+          console.log("ici");
+        }
+    }
+    if (channel.creatorId === res.locals.userId) {
+        droit = true;
+        console.log('la');
+    }
+
+    if (droit === true) {
+        const messages = await db.messages.list(req.params.id);
+        //console.log ("Back messages get: "+messages);
+        res.status(200).json(messages);
+    }
+    else {
+        res.status(403).json("Non autorisé à accéder aux messages de ce channel");
+    }
+  }
+  catch (e) {
+    res.status(404).json("error database "+e);
+  }
+
+
 });
 
 // Ajoute un message au channel désigné par son id
 // Recoit en paramètre url l'id du channel et en paramètre body le message à ajouter
 // retourne le message ajouté
 app.post('/channels/:id/messages', async (req, res) => {
-  console.log ("back message.post :"+JSON.stringify(req.body));
-  const message = await db.messages.create(req.params.id, req.body);
-  res.status(201).json(message);
+  
+  // Il faut vérifier qu'on aie le droit d'ajouter un message à ce channel cad qu'on en est membre
+  // ou le créateur
+  try {
+    const channel = await db.channels.get(req.params.id);
+    let droit = false;
+    for (let i=0; i<channel.idUsers.length ; ++i) {
+        if (channel.idUsers[i].id === res.locals.userId) {
+          droit = true;
+          console.log("ici");
+        }
+    }
+    if (channel.creatorId === res.locals.userId) {
+        droit = true;
+        console.log('la');
+    }
+
+    if (droit === true) {
+      try {
+        const message = await db.messages.create(req.params.id, req.body);
+        res.status(201).json(message);
+      }catch (e) {
+        res.status(404).json("Error database "+e);
+      }
+    }
+    else {
+        res.status(403).json("Non autorisé à poster un message dans ce channel");
+    }
+  }
+  catch (e) {
+    res.status(404).json("error database "+e);
+  }
 });
 
 // Supprime l'ensemble des messages du channel désigné par son id
 // Reçoit en paramètre URL l'id du channel dont on veut supprimer les messages
 app.delete('/channels/:id/messages', async (req, res) => {
-  const data = await db.messages.deleteAll(req.params.id);
-  res.status(201).json(data);
+  
+  // Seul le créateur du channel peut effectuer une telle opération
+  try {
+    const channel = await db.channels.get(req.params.id);
+    let droit = false;
+    if (channel.creatorId === res.locals.userId) {
+        droit = true;
+    }
+
+    if (droit === true) {
+        try {
+          const data = await db.messages.deleteAll(req.params.id);
+          res.status(201).json(data);
+        }catch {
+            res.status(401).json("Error database : "+e);
+        }
+    }
+    else {
+        res.status(403).json("Non autorisé à supprimer les messages de ce channel");
+    }
+  }
+  catch (e) {
+    res.status(404).json("error database "+e);
+  }
+  
 });
 
 // Supprimer un message à partir de sa clé (channelId et creationForId)
 app.delete('/channels/:id/messages/:creaId', async (req, res) => {
-  const data = await db.messages.delete(req.params.id,req.params.creaId);
-  res.status(201).json(data);
+  
+  // Seul le créateur du channel est autorisé à supprimer définitvement un message
+  // les autres utilisateurs suppriment simplement le contenu (put)
+  try {
+    const channel = await db.channels.get(req.params.id);
+    let droit = false;
+    if (channel.creatorId === res.locals.userId) {
+        droit = true;
+    }
+
+    if (droit === true) {
+        try {
+            const data = await db.messages.delete(req.params.id,req.params.creaId);
+            res.status(201).json(data);
+        }
+        catch (e) {
+            res.status(403).json("Error database: "+e);
+        }
+    }
+    else {
+        res.status(403).json("Non autorisé à accéder aux messages de ce channel");
+    }
+  }
+  catch (e) {
+    res.status(404).json("error database "+e);
+  }
+  
 });
 
 // modifier le contenu d'un message
@@ -201,9 +306,17 @@ app.delete('/channels/:id/messages/:creaId', async (req, res) => {
 // En paramètre également: le channel
 // En paramètre local depuis le middleware: l'id du connected user
 app.put('/channels/:id/messages/:creaId', async (req, res) => {
-  console.log ("EUHHH: "+req.body.message);
-  const data = await db.messages.update(req.body.message);
-  res.status(201).json(data);
+
+  //Il faut vérifier que je suis l'auteur du message (le seul à pouvoir modifier un message)
+  // par modif ou suppression, le créateur du channel ne peut que supprimer avec delete
+  if (req.body.author === res.locals.userId) {
+      try{
+        const data = await db.messages.update(req.body);
+        res.status(201).json(data);
+      }catch (e) {
+        res.status(404).json("Error database: "+e);
+      }
+  }
 });
 
 
