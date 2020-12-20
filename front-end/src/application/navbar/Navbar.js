@@ -43,7 +43,9 @@ const Navbar = ({handleDrawerOpen,userConnected,setUserConnected,channels,setCha
                 <MenuIcon />
               </IconButton>
               <span style={styles.title}> </span>  {/*Un espace qui grossit automatiquement */}
-              <ManageChannel channels={channels} setChannels={setChannels} currentChannel={currentChannel} setCurrentChannel={setCurrentChannel}/>
+              {
+                channels.length>0 && <ManageChannel channels={channels} setChannels={setChannels} currentChannel={currentChannel} setCurrentChannel={setCurrentChannel}/>
+              }
               <span style={styles.title}> </span> 
               <ManageAccount userConnected={userConnected} setUserConnected={setUserConnected}/>
             </Toolbar>
