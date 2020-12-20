@@ -184,14 +184,7 @@ app.put('/channels/:id/messages/:creaId', async (req, res) => {
 //____________________________________________________________________
 // USERS
 
-// Lister l'ensemble des utilisateurs stockés dans la BDD
-// Ne reçoit rien en paramètres dans req
-// Retourne un tableau de la forme [ {"username":"user_1","id":"8157aa18-0ac8-45e3-ba97-ab42c2336c8b"},{...} ]
-app.get('/users', async (req, res) => {
-  const users = await db.users.list();
-  
-  res.json(users);
-});
+
 
 // Login
 // params: username et mdp
@@ -296,6 +289,55 @@ app.post('/users', async (req, res) => {
 
 });
 
+// Middleware qui vérifie l'existence du token
+// l'ordre des routes est important car les 2 premières routes doivent rester en libre accès
+app.use ('/users', async (req,res,next) => {
+  console.log ("On use");
+  // Verifier token dans header
+  //console.log (req.headers);
+  
+
+  // Si il y a un header 
+  if (req.headers.authorization != null) {
+    const tokenHeader = req.headers.authorization.split(' ')[1];
+    //console.log (tokenHeader);
+    let decodedToken ;
+    try {
+      decodedToken = jwt.verify(tokenHeader,privateKey);
+    } 
+    catch(e) {
+      console.log ("Erreur middleware: "+e);
+      res.status(403).json(e);
+    }
+    finally {
+      // Variables qui seront passées au middleware suivants
+      res.locals.userId = decodedToken.sub;
+      //console.log ("MCT: "+res.locals.userId)
+      
+      // passer au middleware/requête suivant
+      next();
+    }
+  }
+  // Si pas de header
+  else {
+    const error = "Middleware: Header manquant";
+    console.log (error);
+    res.status(401).json(error);
+  }
+});
+
+
+// Lister l'ensemble des utilisateurs stockés dans la BDD
+// Ne reçoit rien en paramètres dans req
+// Retourne un tableau de la forme [ {"username":"user_1","id":"8157aa18-0ac8-45e3-ba97-ab42c2336c8b"},{...} ]
+app.get('/users', async (req, res) => {
+  const users = await db.users.list();
+  
+  res.json(users);
+});
+
+
+
 // récupérer un utilisateur à partir de son ID
 // Pas de paramètres req, paramètre :id = string
 // Retourne : l'utilisateur trouvé sous forme d'objet {"username":"user_1","id":"3af582ad-b589-483c-97a8-290f2712f8d3"}
@@ -308,17 +350,43 @@ app.get('/users/:id', async (req, res) => {
 // Met a jour les données d'un utilisateur à partir de son id
 // En paramètre : l'id de l'utilisateur à mettre à jour et le nouvel objet utilisateur de type {"username":"user_1",...,...}
 // Ainsi qu'un booléen indiquant si le mdp a été changé et doit donc de nouveau être encrypté
-// Renvoie : l'utilisateur mis à jour
+// Renvoie : l'utilisateur mis à jour, 1 si le mail existe et 2 si le username existe
 app.put('/users/:id', async (req, res) => {
     
-    if (req.body.encrypt === true) {
-        var salt = bcrypt.genSaltSync(10);
-        var hashedPwd = bcrypt.hashSync(req.body.user.password, salt);
-        req.body.user.password = hashedPwd;
+    // Il faut commencer par vérifier si le mail et le username ne sont pas
+    // deja utilisés
+    const userList = await db.users.list();
+
+    // Vérifier que le username et l'email fournis n'existent pas dejà
+    let usernameExiste = 0; 
+    let emailExiste = 0;
+
+    for (let i=0; i<userList.length; ++i) {
+        console.log ("ZBEUL :"+userList[i].username+" "+req.body.user.username+" "+req.params.id !== userList[i].id)
+        if (userList[i].username === req.body.user.username && req.params.id !== userList[i].id ) {
+            usernameExiste ++;
+        }
+        if (userList[i].email === req.body.user.email && req.params.id !== userList[i].id ) {
+            emailExiste ++;
+        }
     }
+
+    if (usernameExiste >0) {
+      res.json('2');
+    }
+    else if (emailExiste > 0) {
+      res.json('1');
+    }
+    else {
+      if (req.body.encrypt === true) {
+          var salt = bcrypt.genSaltSync(10);
+          var hashedPwd = bcrypt.hashSync(req.body.user.password, salt);
+          req.body.user.password = hashedPwd;
+      }
     
-    const user = await db.users.update(req.params.id,req.body.user);
-    res.json(user);
+      const user = await db.users.update(req.params.id,req.body.user);
+      res.json(user);
+    }
 });
 
 module.exports = app

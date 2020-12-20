@@ -21,6 +21,8 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
     const [id,setId] = useState();
     const [useEffectReload,setUseEffectReload] = useState (false);
     const [checked,setChecked] = useState(false);
+    const [errorUsername,setErrorUsername] = useState(false);
+    const [errorEmail,setErrorEmail] = useState(false);
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -39,15 +41,25 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
         //2) Mise a jour en BDD
         const data = await api.updateUser(updatedUser,id,encrypt);
 
-        //3) Mise a jour du state userConnected
-        updatedUser.id = id;
-        setUserConnected(updatedUser);
+        if (data === '1') { // mail existe deja
+            setErrorEmail(true);
+            setErrorUsername(false);
+        }
+        else if (data === '2') {  // username existe deja
+            setErrorEmail(false);
+            setErrorUsername(true);
+        }
+        else {  // si aucn pb
+            //3) Mise a jour du state userConnected
+            updatedUser.id = id;
+            setUserConnected(updatedUser);
 
-        //4) Fermer la boite de dialogue
-        handleClose();
+            //4) Fermer la boite de dialogue
+            handleClose();
 
-        // 5) Recharger le use Effect la prochaine fois
-        setUseEffectReload(!useEffectReload);
+            // 5) Recharger le use Effect la prochaine fois
+            setUseEffectReload(!useEffectReload);
+        }
     }
 
     const handleChange = (e) => {
@@ -96,6 +108,8 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
             setProfileImageNoGravatar(userActual.profileImageNoGravatar);
             setId (userActual.id);
             setChecked(false);
+            setErrorEmail(false);
+            setErrorUsername(false);
         }
         loadDataUser();
         
@@ -121,6 +135,8 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
                     onChange={handleChange}
                     fullWidth
                     required
+                    error={errorUsername}
+                    helperText={errorUsername&&'Ce username existe deja !'}
                 />
                 <Checkbox
                     checked={checked}
@@ -151,6 +167,8 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
                     onChange={handleChange}
                     fullWidth
                     required
+                    error={errorEmail}
+                    helperText={errorEmail&&'Cet email existe deja !'}
                 />
             </form>
             </DialogContent>

@@ -64,7 +64,11 @@ const getUser = async () => {
     const userId = decToken.sub;
     console.log ("Token dec: "+JSON.stringify(decToken)+" id: "+userId);
 
-    const {data} = await axios.get (`${url}/users/${userId}`);
+    const {data} = await axios.get (`${url}/users/${userId}`,{
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    });
     //console.log ("RRRRR: "+JSON.stringify(data));
 
     return data;
@@ -111,7 +115,15 @@ const getChannelsOfConnectedUser = async () => {
 // Vérifie si un user correspondant au userName passé en paramètre existe ou pas
 // Retourne le user s'il a été trouvé, retourne -1 sinon
 const userExists = async (userName) => {
-    const {data} = await axios.get (`${url}/users`);  // récupérer liste des users
+    const token = localStorage.getItem('token');
+
+    // récupérer liste des users
+    const {data} = await axios.get (`${url}/users`,{
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    });  
+
     // Vérifier si le user existe
     let trouve = 0;
     let userId;
@@ -190,10 +202,15 @@ const updateChannel = async(newChannel) => {
 // Recoit en paramètre un tableau d'ID users ['nkm','vge','bhl']
 // Retourne un tableau d'objet associant [{id:'nkm',userName:'Nath',email:'zzz'},{}]
 const getUsernameFromId = async (userListId) => {
-    console.log ("api UNID: "+JSON.stringify(userListId));
+    const token = localStorage.getItem('token');
+
     // 1) Récupérer la liste des utilisateurs de l'app
     // retourne un tableau de users
-    const {data} = await axios.get (`${url}/users`);
+    const {data} = await axios.get (`${url}/users`,{
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    });
 
     // 2) définir le tableau d'objets à rendre
     const userIdUsername = [];
