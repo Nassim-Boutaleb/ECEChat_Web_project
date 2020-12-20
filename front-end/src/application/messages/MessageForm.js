@@ -1,4 +1,4 @@
-import React,{useState} from'react';
+import React from'react';
 import api from '../../api';
 import ChatGravatar from '../Gravatar';
 
@@ -47,7 +47,6 @@ const MessageForm = ({addMessage,userConnected,currentChannel}) => {
         return <div className="App">Loading...</div>;
     }*/
 
-    let userEmail = userConnected.email ;
     let userName = userConnected.username; 
     console.log ("MessageForm: "+userName);
 
@@ -79,15 +78,15 @@ const MessageForm = ({addMessage,userConnected,currentChannel}) => {
         <form style={styles.form}  onSubmit={onSubmit}>
             {
                 userConnected.avatarPreference === 'gravatarRd' &&
-                <img src={ChatGravatar(userConnected.email)}  width='60px' height='60px'/> 
+                <img src={ChatGravatar(userConnected.email)}  width='60px' height='60px' alt="Avatar"/> 
             }
             {
                 userConnected.avatarPreference === 'defaultRd' &&
-                <img src={require(`./../../login${userConnected.profileImageNoGravatar}.jpg`) } width='60px' height='60px'/>
+                <img src={require(`./../../login${userConnected.profileImageNoGravatar}.jpg`) } width='60px' height='60px' alt="Avatar"/>
             }
             {
                 userConnected.avatarPreference === 'uploadOwnRd' &&
-                <img src={require(`./../../Images/${userConnected.profileImageNoGravatar}`) } width='60px' height='60px'/>
+                <img src={require(`./../../Images/${userConnected.profileImageNoGravatar}`) } width='60px' height='60px' alt="Avatar"/>
             } 
             <input type="text" name="content" style={styles.content} />
             <input type="submit" value="Send" style={styles.send} />

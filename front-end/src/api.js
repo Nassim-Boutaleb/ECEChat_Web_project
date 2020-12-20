@@ -44,7 +44,7 @@ const tokenExists = () => {
         // Vérifier la validité du token (durée de vie, hash, ...)
         const token =  localStorage.getItem('token');
         try {
-            const decToken = jwt.verify(token,privateKey);
+            jwt.verify(token,privateKey);
         } catch (e) {
             console.log ("Erreur validation du token");
             console.log ("Error: "+e);
@@ -286,7 +286,7 @@ const deleteMessage = async (message,channel,userConnected) => {
 
     //2.Si on est créateur du channel: supprimer totalement le message
     if (auth === 3) {
-        const {data} = await axios.delete (`${url}/channels/${channelId}/messages/${creaId}`,
+        await axios.delete (`${url}/channels/${channelId}/messages/${creaId}`,
         {
             headers : {
                 'authorization' :   'Bearer ' + token
@@ -300,7 +300,7 @@ const deleteMessage = async (message,channel,userConnected) => {
         message.content = 'message supprimé par son auteur';
         message.alive = false;
         console.log ("Del mess user: "+token);
-        const {data} = await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,message,
+        await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,message,
         {
             headers : {
                 'authorization' :   'Bearer ' + token
@@ -362,7 +362,7 @@ const deleteUserFromChanel = async (channelId,channel) => {
     }
 
     //3. Mettre a jour le channel en BDD
-    const data = updateChannel (channel);
+    updateChannel (channel);
 
     //4. retourner le channel
     return channel;

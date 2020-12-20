@@ -1,14 +1,11 @@
 import React from 'react'
 import moment from 'moment'
 import ChatGravatar from '../Gravatar';
-import IconButton from '@material-ui/core/IconButton';
 import MessageManager from './MessageManager'
 
 
 const styles = {
     messageFromMe: {
-        margin: '.2rem',
-        padding: '.2rem',
         border: '3px solid',
         borderRadius: '20px',
         margin: '15px',
@@ -24,8 +21,6 @@ const styles = {
         order:'3'
     },
     messageFromAnother: {
-        margin: '.2rem',
-        padding: '.2rem',
         border: '3px solid',
         borderRadius: '20px',
         margin: '15px',
@@ -40,8 +35,6 @@ const styles = {
         order:'1'
     },
     messageDeleted: {
-        margin: '.2rem',
-        padding: '.2rem',
         border: '3px solid',
         borderRadius: '20px',
         margin: '15px',
@@ -166,15 +159,15 @@ const Message = ({message,me,index,handleDeleteMessage,isCreator,handleModifyMes
                     <span>{message.authorUsername}</span>
                     {
                         message.avatarPreference === 'gravatarRd' &&
-                        <img src={ChatGravatar(message.authorEmail)}  width='30px'/> 
+                        <img src={ChatGravatar(message.authorEmail)}  width='30px' alt="Avatar"/> 
                     }
                     {
                         message.avatarPreference === 'defaultRd' &&
-                        <img src={require(`./../../login${message.profileImageNoGravatar}.jpg`) } width='30px'/>
+                        <img src={require(`./../../login${message.profileImageNoGravatar}.jpg`) } width='30px' alt="Avatar"/>
                     }
                     {
                         message.avatarPreference === 'uploadOwnRd' &&
-                        <img src={require(`./../../Images/${message.profileImageNoGravatar}`) } width='30px'/>
+                        <img src={require(`./../../Images/${message.profileImageNoGravatar}`) } width='30px' alt="Avatar"/>
                     }
                     {' '}
                     <span>{date}</span>

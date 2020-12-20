@@ -138,7 +138,7 @@ const ManageChannel = ({channels,setChannels,currentChannel,setCurrentChannel,us
                         currentChannel={currentChannel}
                         authorization={authorization}
                 />
-            {authorization == 2 && <MenuItem onClick={handleChannelDeleteOpen}>Supprimer le channel</MenuItem> }
+            {authorization === 2 && <MenuItem onClick={handleChannelDeleteOpen}>Supprimer le channel</MenuItem> }
                 <ChannelDeleteAlert
                         open={ChannelDeleteOpen}
                         handleClose={handleChannelDeleteClose}

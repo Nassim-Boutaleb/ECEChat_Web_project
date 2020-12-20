@@ -25,7 +25,7 @@ const ChannelNameManager = ({open,handleClose,channels,setChannels,currentChanne
 
         //3) Mise a jour du tableau channels avec setChannels et appel auto de Render()
         let newChannelsList = channels.slice();
-        newChannelsList [currentChannel] = newChannel;
+        newChannelsList[currentChannel] = newChannel;
         setChannels (newChannelsList);
 
         //4) Fermer la boite de dialogue

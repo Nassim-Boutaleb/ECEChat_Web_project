@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Channels from './channels/Channels'
 import Channel from './messages/Channel'
 import Drawer from '@material-ui/core/Drawer';

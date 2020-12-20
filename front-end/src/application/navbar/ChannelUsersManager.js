@@ -92,7 +92,7 @@ const ChannelUsersManager = ({open,handleClose,channels,setChannels,currentChann
             creatorId: actualChannel.creatorId,
             id: actualChannel.id
         }
-        const data = await api.updateChannel(updatedChannel);
+        await api.updateChannel(updatedChannel);
 
         setUserList([]);
         

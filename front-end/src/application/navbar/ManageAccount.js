@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React from 'react'
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -7,19 +7,7 @@ import api from './../../api'
 import UserAccountManager from './UserAccountManager'
 
 
-const styles = {
-    root: {
-      //flexGrow: 1,
-      //backgroundColor: '#373B44',
-    },
-    menuButton: {
-      marginRight: '30px',
-    },
-    title: {
-      flexGrow: 1,
-    },
-    
-  };
+
 
 const ManageAccount = ({userConnected,setUserConnected}) => {
     
@@ -90,9 +78,9 @@ const ManageAccount = ({userConnected,setUserConnected}) => {
             >
                 {
                     userConnected.avatarPreference === 'uploadOwnRd' ?
-                    <img src={require(`./../../Images/${userConnected.profileImageNoGravatar}`) } width='30px'/> :
+                    <img src={require(`./../../Images/${userConnected.profileImageNoGravatar}`) } width='30px' alt="Avatar"/> :
                     userConnected.avatarPreference === 'defaultRd' ?
-                    <img src={require(`./../../login${userConnected.profileImageNoGravatar}.jpg`) } width='30px'/> :
+                    <img src={require(`./../../login${userConnected.profileImageNoGravatar}.jpg`) } width='30px' alt="Avatar"/> :
                     <AccountCircle fontSize='large' /> 
                 }   
             </IconButton>

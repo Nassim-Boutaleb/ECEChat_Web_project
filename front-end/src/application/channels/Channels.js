@@ -1,5 +1,4 @@
-import React,{useState} from 'react';
-import api from '../../api'
+import React from 'react';
 import ChannelNewDialog from './ChannelNewDialog'
 import ChannelPreview from './ChannelPreview'
 

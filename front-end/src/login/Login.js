@@ -7,8 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 //import privateKey from '../privateKey'
-const privateKey = require ( './../privateKey');
-const jwt = require('jsonwebtoken');
+
 
 
 // Styles

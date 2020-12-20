@@ -1,6 +1,6 @@
-import React from 'react';
-//import Gravatar from 'react-gravatar';
-import md5 from 'md5';
+
+
+
 
 // Recoit l'email de celui qui a envoyé le message
 const ChatGravatar = (userEmail) => {

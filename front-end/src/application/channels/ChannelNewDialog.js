@@ -13,7 +13,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import api from '../../api'
-import { StylesProvider } from '@material-ui/core';
+
 
 
 const styles = {
@@ -46,7 +46,7 @@ const ChannelNewDialog = ({setChannels,channels}) => {
           //setUserList([...userList,newValue]);
           setUserName (newValue);
       }
-      else if (champModifie == 'userStatus') {
+      else if (champModifie === 'userStatus') {
         setUserStatus(newValue);
       }
   }

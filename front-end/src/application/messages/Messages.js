@@ -68,7 +68,7 @@ const Messages =  ({messages,channel,userConnected,setMessages,isCreator}) => {
     // prend en paramètre l'index du message et le nouveau message
     const handleModifyMessage = async (index,message,channel) => {
         //1. appel à l'api pour modification en BDD
-        const data = await api.modifyMessageContent(message,channel);
+        await api.modifyMessageContent(message,channel);
 
         //2.Mise a jour du message dans le state
         const newMessagesList = messages.slice();

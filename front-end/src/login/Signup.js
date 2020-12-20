@@ -134,10 +134,7 @@ const Signup = () => {
         setRadioValue(e.target.value);
     }
 
-    const testGetPath = () => {
-        console.log ("PPRRT: "+profileImagePath);
-        console.log ("end");
-    }
+    
 
     return (
         <div style={styles.root}>

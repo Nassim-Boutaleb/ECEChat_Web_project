@@ -33,7 +33,7 @@ class ProfilePic extends Component {
     render(){
         const imageMapper = this.state.imagesArray.map((image,index) => {
             return (
-                <img src={image}
+                <img src={image} alt="Preview"
                 onClick={() => this.props.handleImageChange(image,index)}/>
             )
         })
