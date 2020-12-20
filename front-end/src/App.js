@@ -13,6 +13,7 @@ import {
   Link
 } from "react-router-dom";
 import PrivateRoute from './PrivateRoute'
+import NotFound from './NotFound'
 
 const styles = {
   root: {
@@ -46,6 +47,7 @@ export default () => (
         <Route exact path ='/' component={Login} />
         <Route exact path ='/signup' component={Signup} />
         <PrivateRoute exact path ='/Main' component={MainPage} />
+        <Route component={NotFound} />
       </Switch>
   </div>
 );  // fin export default
