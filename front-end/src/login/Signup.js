@@ -15,6 +15,7 @@ const styles = {
         borderTop: '2px solid #373B44',
         padding: '.5rem',
         display: 'flex',
+        color: 'black'
     },
     content: {
         flex: '1 1 auto',
@@ -62,24 +63,17 @@ const Signup = () => {
 
         /// On veut vérifier si le username ou l'email n'existent pas déjà
         // appel à l'API renvoyant l'ensemble des utilisateurs
-        const {data} = await api.apiLogin();
-        let usernameExiste = 0; 
-
-        for (let i=0; i<data.length; ++i) {
-            if (data[i].username === username) {
-                usernameExiste ++;
-            }
+        const data = await api.apiSignup(user);
+        if (data === '1') {
+            alert ("Cet email existe deja");
         }
-
-        if (usernameExiste == 0) {
-            // appel à l'API de création d'utilisateur
-            api.apiSignup(user);
+        else if (data === '2') {
+            alert ("Ce username existe deja");
+        }
+        else {
             console.log ('Vous etes inscrit');
             window.location ="/";
         } 
-        else {
-            alert ("username existe deja");
-        }
         
     } 
 

@@ -11,24 +11,13 @@ const url = 'http://localhost:3001' ;
 
 // Ajout d'un utilisateur en bdd
 // En paramètre : l'utilisateur a ajouter sous la forme {username:'user_1,email:'email',password:'pass1'}
-// Retourne : ?
-const apiSignup = (user) => {
-    //console.log (JSON.stringify(user));
+// Retourne : 2 si username existe , 1 si email existe deja, le nouvel utilisateur sinon
+const apiSignup = async (user) => {
 
-    // appel à la route post /users pour créer l'utilisateur en BDD
-    user = axios.post (`${url}/users`, user)
-
-    .then(function (response) {
-        // handle success
-        console.log(response);
-    })
-    .catch(function (error) {
-        // handle error
-        console.log(error);
-    });
-
-    //console.log (errors);
-    //return errors;
+    console.log (JSON.stringify(user));
+    const {data} = await axios.post (`${url}/users`,user);
+    console.log ("API signup: "+data);
+    return data;
     
 };
 

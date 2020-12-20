@@ -198,7 +198,7 @@ app.get('/users', async (req, res) => {
 // en header: renvoie le token
 app.post('/users/login', async (req, res) => {
     const data = await db.users.list();  // Liste des users
-    console.log ("Bjr "+req.body.username);
+    //console.log ("Bjr "+req.body.username);
     // Recup infos de login
     const username = req.body.username;
     const password = req.body.password;
@@ -252,9 +252,42 @@ app.post('/users/login', async (req, res) => {
 // Ajouter un user en BDD
 // En paramètres : req = {username: 'user_1'}
 // retourne : res = statut et user = { { username: 'user_1', id: 'c50100a8-5fc0-4e62-8ad5-88941325a631' } }
+// Vérifie que le user que l'on veut créer n'existe pas dejà
+// retourne 200 et l'utilisateur si OK, retourne 1 si email existe et 2 si username existe deja
 app.post('/users', async (req, res) => {
-  const user = await db.users.create(req.body);
-  res.status(201).json(user);
+
+  const newUsername = req.body.username;
+  const newEmail = req.body.email;
+  console.log ("cred: "+JSON.stringify(req.body));
+  // appel à la db pour lister tous les utilisateurs
+  const userList = await db.users.list();
+
+  // Vérifier que le username et l'email fournis n'existent pas dejà
+  let usernameExiste = 0; 
+  let emailExiste = 0;
+
+  for (let i=0; i<userList.length; ++i) {
+      if (userList[i].username === newUsername) {
+          usernameExiste ++;
+      }
+      if (userList[i].email === newEmail) {
+          emailExiste ++;
+          console.log ("L: "+userList[i].email+" "+newEmail);
+      }
+  }
+
+  if (usernameExiste >0) {
+    res.json('2');
+  }
+  else if (emailExiste > 0) {
+    res.json('1');
+  }
+  else {
+    // Ajouter l'utilisateur en BDD 
+    const user = await db.users.create(req.body);
+    res.status(201).json(user);
+  }
+
 });
 
 // récupérer un utilisateur à partir de son ID
