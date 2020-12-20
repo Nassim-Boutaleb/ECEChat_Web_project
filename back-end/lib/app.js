@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 const uploads = require ('./ImageUploadBack');
 
 app.get('/Image', (req,res) => {
-  console.log('serijtfdgyfthugyft');
+  
 });
 
 app.post('/Image',uploads.single('image'),async(req,res) => {
@@ -34,15 +34,15 @@ app.post('/Image',uploads.single('image'),async(req,res) => {
 // Middleware systématiquement appelé avant toute autre requête vers channels
 // vérifie la validité du token d'identification passé via le header authorization
 app.use ('/channels', async (req,res,next) => {
-  console.log ("On use");
+  
   // Verifier token dans header
-  //console.log (req.headers);
+  
   
 
   // Si il y a un header 
   if (req.headers.authorization != null) {
     const tokenHeader = req.headers.authorization.split(' ')[1];
-    //console.log (tokenHeader);
+    
     let decodedToken ;
     try {
       decodedToken = jwt.verify(tokenHeader,privateKey);
@@ -54,7 +54,7 @@ app.use ('/channels', async (req,res,next) => {
     finally {
       // Variables qui seront passées au middleware suivants
       res.locals.userId = decodedToken.sub;
-      //console.log ("MCT: "+res.locals.userId)
+      
       
       // passer au middleware/requête suivant
       next();
@@ -73,12 +73,12 @@ app.use ('/channels', async (req,res,next) => {
 // Reçoit du middleware d'identification res.locals.userId => id du user connecté
 // Retourne un tableau de channels contenant uniquement les channel auxquels l'utilisateur connecté est abonné
 app.get('/channels', async (req, res) => {
-  console.log ("On get");
+  
   const userId = res.locals.userId; // id de l'utilisateur connecté dont on veut lister les channels
   
   const channels = await db.channels.list(); // récupérer tous les channels de l'appli
   const channelsOfUser = [];  // on mettra les channels de l'utilisateur connecté ici
-  //console.log ("back channels: "+JSON.stringify(channels));
+  
 
 
   // Channels est un tableau de channel du type [{name:"channel1",idUsers:['x54r','ppo6'],creatorID:xgsg,id:pxo}]
@@ -88,9 +88,9 @@ app.get('/channels', async (req, res) => {
 
   for (var i=0; i< channels.length; ++i) {
       for (j=0; j<channels[i].idUsers.length; j++) {
-          //console.log ("jaja: "+channels[i].idUsers[j]+" i= "+i);
+          
           if (channels[i].idUsers[j].id === userId) {
-              //console.log ("On push");
+              
               channelsOfUser.push (channels[i]);
           }
       }
@@ -104,11 +104,11 @@ app.get('/channels', async (req, res) => {
 
 // TEST
 // Retourne tous les channels de l'app
-app.get('/allChannels', async (req, res) => {
+/*app.get('/allChannels', async (req, res) => {
   console.log ("Get all channels");
   const channels = await db.channels.list()
   res.json(channels)
-});
+});*/
 
 
 // Crée un channel en base de données 
@@ -191,17 +191,17 @@ app.get('/channels/:id/messages', async (req, res) => {
     for (let i=0; i<channel.idUsers.length ; ++i) {
         if (channel.idUsers[i].id === res.locals.userId) {
           droit = true;
-          console.log("ici");
+         
         }
     }
     if (channel.creatorId === res.locals.userId) {
         droit = true;
-        console.log('la');
+        
     }
 
     if (droit === true) {
         const messages = await db.messages.list(req.params.id);
-        //console.log ("Back messages get: "+messages);
+        
         res.status(200).json(messages);
     }
     else {
@@ -228,12 +228,12 @@ app.post('/channels/:id/messages', async (req, res) => {
     for (let i=0; i<channel.idUsers.length ; ++i) {
         if (channel.idUsers[i].id === res.locals.userId) {
           droit = true;
-          console.log("ici");
+         
         }
     }
     if (channel.creatorId === res.locals.userId) {
         droit = true;
-        console.log('la');
+        
     }
 
     if (droit === true) {
@@ -344,7 +344,7 @@ app.put('/channels/:id/messages/:creaId', async (req, res) => {
 // en header: renvoie le token
 app.post('/users/login', async (req, res) => {
     const data = await db.users.list();  // Liste des users
-    //console.log ("Bjr "+req.body.username);
+    
     // Recup infos de login
     const username = req.body.username;
     const password = req.body.password;
@@ -382,7 +382,7 @@ app.post('/users/login', async (req, res) => {
             { expiresIn: '1h' }
         );
         res.header('Authorization','Bearer '+token);
-        console.log ("ici");
+     
         res.status(200).json({code:'0',token: token });
     }
     else if (usernameTrouve > 0 && passCorrespond == 0) { 
@@ -404,7 +404,7 @@ app.post('/users', async (req, res) => {
 
   const newUsername = req.body.username;
   const newEmail = req.body.email;
-  console.log ("cred: "+JSON.stringify(req.body));
+  
   // appel à la db pour lister tous les utilisateurs
   try {
     const userList = await db.users.list();
@@ -418,7 +418,7 @@ app.post('/users', async (req, res) => {
         }
         if (userList[i].email === newEmail) {
             emailExiste ++;
-            console.log ("L: "+userList[i].email+" "+newEmail);
+            
         }
     }
 
@@ -450,7 +450,7 @@ app.post('/users', async (req, res) => {
 // Middleware qui vérifie l'existence du token
 // l'ordre des routes est important car les 2 premières routes doivent rester en libre accès
 app.use ('/users', async (req,res,next) => {
-  console.log ("On use");
+
   // Verifier token dans header
   //console.log (req.headers);
   
@@ -458,7 +458,7 @@ app.use ('/users', async (req,res,next) => {
   // Si il y a un header 
   if (req.headers.authorization != null) {
     const tokenHeader = req.headers.authorization.split(' ')[1];
-    //console.log (tokenHeader);
+    
     let decodedToken ;
     try {
       decodedToken = jwt.verify(tokenHeader,privateKey);
@@ -470,7 +470,7 @@ app.use ('/users', async (req,res,next) => {
     finally {
       // Variables qui seront passées au middleware suivants
       res.locals.userId = decodedToken.sub;
-      //console.log ("MCT: "+res.locals.userId)
+      
       
       // passer au middleware/requête suivant
       next();
@@ -501,7 +501,7 @@ app.get('/users', async (req, res) => {
 // Retourne : l'utilisateur trouvé sous forme d'objet {"username":"user_1","id":"3af582ad-b589-483c-97a8-290f2712f8d3"}
 app.get('/users/:id', async (req, res) => {
   const user = await db.users.get(req.params.id);
-  console.log ("back: "+JSON.stringify(user));
+  
   res.json(user);
 });
 
@@ -520,7 +520,7 @@ app.put('/users/:id', async (req, res) => {
     let emailExiste = 0;
 
     for (let i=0; i<userList.length; ++i) {
-        console.log ("ZBEUL :"+userList[i].username+" "+req.body.user.username+" "+req.params.id !== userList[i].id)
+       
         if (userList[i].username === req.body.user.username && req.params.id !== userList[i].id ) {
             usernameExiste ++;
         }

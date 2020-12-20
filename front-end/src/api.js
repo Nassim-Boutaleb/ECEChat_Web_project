@@ -14,9 +14,9 @@ const url = 'http://localhost:3001' ;
 // Retourne : 2 si username existe , 1 si email existe deja, le nouvel utilisateur sinon
 const apiSignup = async (user) => {
 
-    console.log (JSON.stringify(user));
+    
     const {data} = await axios.post (`${url}/users`,user);
-    console.log ("API signup: "+data);
+   
     return data;
     
 };
@@ -24,7 +24,7 @@ const apiSignup = async (user) => {
 // Login d'un utilisateur 
 const apiLogin = async (username,password) => {
     const response = await axios.post (`${url}/users/login`,{username: username,password: password});
-    //console.log("ARFFFF :"+response.data.code+" "+response.status+" "+response.data.token);
+    
     
     // Stockage token:
     if (response.data.code === '0') { 
@@ -59,17 +59,17 @@ const tokenExists = () => {
 // puis retourne cet utilisateur sous la forme objet {"username":"T9","email":"test@gmail.com","password":"T99","id":"ce4ea26c-5abc-4060-b98f-18c11d627eec"}
 const getUser = async () => {
     const token =  localStorage.getItem('token');
-    console.log ("Token :"+token);
+    
     const decToken = jwt.verify(token,privateKey);
     const userId = decToken.sub;
-    console.log ("Token dec: "+JSON.stringify(decToken)+" id: "+userId);
+    
 
     const {data} = await axios.get (`${url}/users/${userId}`,{
         headers : {
             'authorization' :   'Bearer ' + token
         }
     });
-    //console.log ("RRRRR: "+JSON.stringify(data));
+    
 
     return data;
 }
@@ -82,7 +82,7 @@ const getUser = async () => {
 // retourne: le channel créé
 const createChannel = async (channel,userList) => {
     const token = localStorage.getItem('token');
-    console.log ("APIFRONTCREECHANNEL: "+JSON.stringify(channel));
+    
     const {data} = await axios.post(`${url}/channels`,{channel:channel,userList:userList},{
         headers : {
             'authorization' :   'Bearer ' + token
@@ -164,14 +164,14 @@ const getMessages = async(channelId) => {
 const addMessageDB = async (newMessage,channelId) => {
     
     const token = localStorage.getItem('token');
-    console.log ('API addMessageDB newMessage:  '+JSON.stringify(newMessage));
+    
     const {data} = await axios.post (`${url}/channels/${channelId}/messages`,newMessage,
     {
         headers : {
             'authorization' :   'Bearer ' + token
         }
     });  
-    console.log ("API addMessageDB data retour: mess ajouté: "+JSON.stringify(data));
+   
     return data;
 }
 
@@ -193,7 +193,7 @@ const updateChannel = async(newChannel) => {
             'authorization' :   'Bearer ' + token
         }
     });  
-    console.log ("API updateChannel data retour:  "+JSON.stringify(data));
+    
     return data;
 
 }
@@ -299,7 +299,7 @@ const deleteMessage = async (message,channel,userConnected) => {
     else {
         message.content = 'message supprimé par son auteur';
         message.alive = false;
-        console.log ("Del mess user: "+token);
+        
         await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,message,
         {
             headers : {

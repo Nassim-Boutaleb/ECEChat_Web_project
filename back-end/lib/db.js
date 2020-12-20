@@ -27,10 +27,10 @@ module.exports = {
         idUsers.push ({id: userList[i].id, status: userList[i].status});
       }
       
-      console.log ("BDD:Idusers: "+idUsers);
+      
 
       const channelP = merge (channel,{idUsers: idUsers,creatorId: idUser});
-      console.log (channelP);
+      
 
       // ce que l'on met en bdd (value): {name:'chan1',creatorId:'xxx',idUsers:[{id:'zzz',status:'utilisateur'}]}
       await db.put(`channels:${id}`, JSON.stringify(channelP))
@@ -73,11 +73,7 @@ module.exports = {
           creatorId: channel.creatorId
         }));
 
-        /*console.log ("BDD update channel: "+JSON.stringify({
-          name: channel.name,
-          idUsers: channel.idUsers,
-          creatorId: channel.creatorId
-        }));*/
+        
         return merge(channel, {id: id});
 
     },
@@ -100,7 +96,7 @@ module.exports = {
     // Paramètres: channelID id du channel (string)
     // et message objet de forme {author:"david","content":"bonjour",creation:"ejdj"}
     create: async (channelId, message) => {
-      console.log ("DB create message: "+JSON.stringify(message)+" "+message.author);
+      
 
       if(!channelId) throw Error('Invalid channel');
       if(!message.author) throw Error('Invalid message no author');
@@ -245,9 +241,9 @@ module.exports = {
       if(!user.username) throw Error('Invalid user');
       if(!id) throw Error ('No id provided');
   
-      //console.log ("BD: "+`users:${id}`, JSON.stringify(user));
+      
       await db.put(`users:${id}`, JSON.stringify(user));
-      //console.log ("DBR: "+JSON.stringify(merge(user, {id: id} ))); //dbg
+      
       return merge(user, {id: id});
     },
 

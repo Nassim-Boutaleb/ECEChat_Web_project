@@ -47,15 +47,14 @@ const MainPage = () => {
   // et renvoyer cet utilisateur
   const getUserConnectedFc = async () => {
       const userConnected = await api.getUser();
-      //console.log ("Main:YESSS");
-      //console.log ("UCONN: "+JSON.stringify(userConnected));
+
       setUserConnected(userConnected);
   }
 
   // appel à l'API qui va lister (à partir du token) l'ensemble des channels de l'utilisateur connecté
   const getChannelsOfConnectedUser = async () => {
       const {data} = await api.getChannelsOfConnectedUser();
-      console.log ("Data??: "+JSON.stringify(data));
+      
       setChannels ([...data]);
       setLoading(false);
   }

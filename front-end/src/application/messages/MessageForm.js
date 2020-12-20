@@ -29,26 +29,10 @@ const styles = {
 // Composant MessageSend
 const MessageForm = ({addMessage,userConnected,currentChannel}) => {
 
-    // attendre avant de render
-    //const [isLoading, setLoading] = useState(true);
-    //const [userName,setUnsername] = useState('');
-
-    /*const getUserConnectedFc = async () => {
-        // appel à l'API qui va, à partir du token, rechercher l'id de l'utilisateur connecté 
-        // et renvoyer cet utilisateur
-        const userConnected = await api.getUser();
-        console.log ("Main:YESSS");
-        setUnsername(userConnected.username);
-        setLoading(false);
-    }*/
     
-    /*if (isLoading) {
-        getUserConnectedFc();
-        return <div className="App">Loading...</div>;
-    }*/
 
     let userName = userConnected.username; 
-    console.log ("MessageForm: "+userName);
+    
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -65,7 +49,7 @@ const MessageForm = ({addMessage,userConnected,currentChannel}) => {
         const mbdd = await api.addMessageDB(newMessage,currentChannel.id);
 
         // Ajout du message dans la liste des messages. Appel à la fonction addMessage
-        console.log (" mbdd: "+JSON.stringify(mbdd));
+        
 
         // Pour affichage du username
         mbdd.authorUsername = userConnected.username;

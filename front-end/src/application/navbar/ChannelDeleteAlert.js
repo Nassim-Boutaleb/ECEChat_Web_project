@@ -11,17 +11,17 @@ const ChannelDeleteAlert = ({open,handleClose,channels,setChannels,currentChanne
 
     const handleDelete = async() => {
         //1. Récupérer le channel ID
-        console.log ("DELCUCH: "+currentChannel);
+        
         const channelToDelete = channels[currentChannel];
         const channelId = channelToDelete.id;
         
         // 2. Avant de supprimer le channel il faut en supprimer tous les messages 
         const data = await api.deleteChannelMessages(channelId);
-        alert (data);
+        //alert (data);
 
         //3. Suppression du channel en lui-même
         const delChannel = await api.deleteChannel(channelId);
-        alert (delChannel);
+        //alert (delChannel);
 
         //4. Mettre a jour le tableau de channels + reRender
         const copyChannels = channels.slice();

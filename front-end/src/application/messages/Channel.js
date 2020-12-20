@@ -86,7 +86,6 @@ const Channel =  ({channel,userConnected,currentChannel}) => {
 
     useEffect(()=> {
         getMessages();
-        console.log ("Use Effect");
     },[currentChannel]);
 
     

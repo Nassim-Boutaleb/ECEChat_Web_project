@@ -16,7 +16,7 @@ const ChannelLeaveAlert = ({open,handleClose,channels,setChannels,currentChannel
         
         //3. Suppression du user du channel et mise a jour 
         const delChannel = await api.deleteUserFromChanel(channelId,channels[currentChannel]);
-        alert (delChannel);
+        //alert (delChannel);
 
         //4. Mettre a jour le tableau de channels en le supprimant de notre liste peros de channel+ reRender
         const copyChannels = channels.slice();

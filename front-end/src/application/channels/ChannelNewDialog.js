@@ -38,7 +38,7 @@ const ChannelNewDialog = ({setChannels,channels}) => {
   const handleChange = (e) => {
       const champModifie = e.target.name
       const newValue = e.target.value;
-      //console.log ("NewValue: "+newValue);
+    
       if (champModifie === 'channelName') {
           setChannelName(newValue);
       }
@@ -54,15 +54,15 @@ const ChannelNewDialog = ({setChannels,channels}) => {
   // A la validation: appel à l'API pour créer le channel en BDD 
   const handleSubmit = async () => {
       const channel = {name:channelName};
-      console.log ("ChannelsAvCrea: "+JSON.stringify(channel));
+      
       const data = await api.createChannel(channel,userList);
-      console.log ("ChannelApresCrea: "+JSON.stringify(data));
+      
       
       // Ajouter le channel à la liste des channels stockée dans Main
       
       setOpen(false); // fermer boite de dialogue
       setChannels([...channels,data]);
-      console.log ("ChannelasStateApres: ///: "+channels);
+      
   }
 
   // Ajouter le user à la liste des users à ajouter au channel, après avoir vérifié son existance
@@ -97,7 +97,7 @@ const ChannelNewDialog = ({setChannels,channels}) => {
 
   // DEB
   const dispList = () => {
-    console.log ("LISTEUSERCHANNEL: "+JSON.stringify(userList));
+    
   }
 
 

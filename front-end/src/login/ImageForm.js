@@ -17,9 +17,9 @@ const ImageForm = ({handleNewImage,disabled,setpathOwn}) => {
     }
     const handleSubmit = async () => {
         const pathOwn= await UploadAction(image);
-        console.log ("AZERTY: "+pathOwn);
+        
         const pathOwnRev = pathOwn.split('\\')[4];
-        console.log ("AZRIA :"+pathOwnRev);
+      
         setpathOwn(pathOwnRev);
         setPreview(false);
         setImages(false);
