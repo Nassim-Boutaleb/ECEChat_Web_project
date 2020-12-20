@@ -8,6 +8,7 @@ import Pic1 from './pics/Image1.png';
 import Pic2 from './pics/Image2.jpeg';
 import Pic3 from './pics/Image3.png';
 import Pic4 from './pics/Image4.jpg';
+import AppImageUpload from './AppImageUpload'
 
 // Styles
 const styles = {
@@ -97,12 +98,14 @@ const Signup = () => {
 
     return (
         <div>
+            <AppImageUpload/>
         <form style={styles.form}  onSubmit={handleSubmit}>
             <Avatar size={128} icon="user" src={profileImage}/>
             <ProfilePic handleImageChange={handleImageChange} pic1={Pic1} pic2={Pic2} pic3={Pic3} pic4={Pic4}  />
             Email <input type="text" name="email" style={styles.content} value={email} onChange={handleChange} />
             Username <input type="text" name="username" style={styles.content} value={username} onChange={handleChange} />
             Password <input type="text" name="password" style={styles.content} value={password} onChange={handleChange} />
+            Préférences d'avatar
             <input type="submit" value="Inscription" style={styles.send} />
         </form>
         <button onClick={testGetAllChannels} >Get all Channels (TEST)</button>

@@ -4,7 +4,6 @@ import md5 from 'md5';
 
 // Recoit l'email de celui qui a envoyé le message
 const ChatGravatar = (userEmail) => {
-    //let userEmail = localStorage.getItem('userEmail'); // a retirer
     // a partir de l'email du username du user qui a posté le msg (ou de son id plutot)
     // récupérer son mail
     var md5 = require('md5');

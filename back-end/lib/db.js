@@ -252,10 +252,8 @@ module.exports = {
     },
 
     // TODO
-    delete: (id, user) => {
-      const original = store.users[id]
-      if(!original) throw Error('Unregistered user id')
-      delete store.users[id]
+    delete: (id) => {
+      db.del(`user:${id}`);
     }
   },
 

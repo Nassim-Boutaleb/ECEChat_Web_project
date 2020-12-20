@@ -16,6 +16,16 @@ app.get('/', (req, res) => {
   ].join(''))
 });
 
+const uploads = require ('./ImageUploadBack');
+app.get('/Image', (req,res) => {
+  console.log('serijtfdgyfthugyft');
+});
+app.post('/Image',uploads.single('image'),async(req,res) => {
+  console.log("L'image est push")
+  const image = req.file.path;
+  res.json({ msg: 'Image est crée'})
+});
+
 // Channels
 
 // Middleware systématiquement appelé avant toute autre requête vers channels

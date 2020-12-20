@@ -3,6 +3,7 @@ import moment from 'moment'
 import ChatGravatar from '../Gravatar';
 import IconButton from '@material-ui/core/IconButton';
 import MessageManager from './MessageManager'
+import img from './../../login/pics/Image1.png'
 
 const styles = {
     messageFromMe: {
@@ -145,7 +146,8 @@ const Message = ({message,me,index,handleDeleteMessage,isCreator,handleModifyMes
         }
     });
       
-    const date = moment(message.creation).fromNow();
+    const date =moment(message.creation).fromNow(); //new Date(message.creation).toLocaleString("fr-FR");
+    
     const dateMod = message.lastModified !== 'never' ? moment(message.creation).fromNow() : null;
     const alive = message.alive ;  // message supprimé ?
 
@@ -161,8 +163,9 @@ const Message = ({message,me,index,handleDeleteMessage,isCreator,handleModifyMes
         <div style={me ? styles.wrapperFromMe : styles.wrapperFromAnother}>
             <div style={!alive ? styles.messageDeleted : me ? styles.messageFromMe : styles.messageFromAnother}>
                 <p>
-                    <span>{message.authorUsername}</span> {/** A terme message aura seulement l'id, il faudra récupérer le username avec la fonction dédiée dan l'API */}
+                    <span>{message.authorUsername}</span>
                     <img src={ChatGravatar(message.authorEmail)}  width='30px'/> 
+                    {/**<img src={require('./../../login/pics/Image1.png') } width='30px'/>*/}
                     {' '}
                     <span>{date}</span>
                     {message.lastModified !== 'never' && <p>Modifié {dateMod}</p> }

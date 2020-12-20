@@ -100,7 +100,7 @@ const MessageManager = ({index,message,handleDeleteMessage,handleModifyMessage,m
 
     return (
         <div  style={styles.icon}>
-            <IconButton ><ChatIcon color='primary' onClick={handleClick}/></IconButton>
+            <IconButton onClick={handleClick} ><ChatIcon color='primary'/></IconButton>
             <Menu
             id="message_manager"
             anchorEl={anchorEl}
