@@ -307,9 +307,17 @@ app.get('/users/:id', async (req, res) => {
 
 // Met a jour les données d'un utilisateur à partir de son id
 // En paramètre : l'id de l'utilisateur à mettre à jour et le nouvel objet utilisateur de type {"username":"user_1",...,...}
+// Ainsi qu'un booléen indiquant si le mdp a été changé et doit donc de nouveau être encrypté
 // Renvoie : l'utilisateur mis à jour
 app.put('/users/:id', async (req, res) => {
-    const user = await db.users.update(req.params.id,req.body);
+    
+    if (req.body.encrypt === true) {
+        var salt = bcrypt.genSaltSync(10);
+        var hashedPwd = bcrypt.hashSync(req.body.user.password, salt);
+        req.body.user.password = hashedPwd;
+    }
+    
+    const user = await db.users.update(req.params.id,req.body.user);
     res.json(user);
 });
 

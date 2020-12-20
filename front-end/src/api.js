@@ -308,10 +308,10 @@ const modifyMessageContent = async (message,channel) => {
 }
 
 // Cette fonction met a jour les informations d'un utilisateur en BDD
-const updateUser = async (updatedUser,userId) => {
+const updateUser = async (updatedUser,userId,encrypt) => {
     const token = localStorage.getItem ('token');
 
-    const {data} = await axios.put (`${url}/users/${userId}`,updatedUser,
+    const {data} = await axios.put (`${url}/users/${userId}`,{user: updatedUser,encrypt: encrypt },
     {
         headers : {
             'authorization' :   'Bearer ' + token

@@ -6,18 +6,21 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Checkbox from '@material-ui/core/Checkbox';
 import api from '../../api';
 
 // Boite de dialogue pour changer le nom du channel
 const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) => {
 
     const [username,setUsername] = useState('');
-    const [password,setPassword] = useState('');
+    const [password,setPassword] = useState(''); // Le mot de passe controlé par formulaire
+    const [oldPassword,setOldPassword] = useState('');  // Le mot de passe do'origine sauvegardé
     const [email,setEmail] = useState('');
     const [gender,setGender] = useState('');
     const [profileImageNoGravatar,setProfileImageNoGravatar] = useState('');
     const [id,setId] = useState();
     const [useEffectReload,setUseEffectReload] = useState (false);
+    const [checked,setChecked] = useState(false);
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,8 +33,11 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
             profileImageNoGravatar : profileImageNoGravatar,
         }
 
+        //1b) Faut il encrypter le nouveau mdp ou a t'on gardé l'ancien ?
+        const encrypt = checked;  // true= case nouveau mdp cochée = il faut encrypter
+
         //2) Mise a jour en BDD
-        const data = await api.updateUser(updatedUser,id);
+        const data = await api.updateUser(updatedUser,id,encrypt);
 
         //3) Mise a jour du state userConnected
         updatedUser.id = id;
@@ -60,6 +66,17 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
         
     }
 
+    const handleCheckboxChange = (e) => {
+        const isChecked = e.target.checked;
+        setChecked(isChecked);
+        if (isChecked === true) {
+            setPassword('');
+        }
+        else {
+            setPassword(oldPassword);
+        }
+    }
+
     const handleClickClose = () => {
         setUseEffectReload(!useEffectReload);
         handleClose();
@@ -74,9 +91,11 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
             //2) remplir les champs
             setUsername(userActual.username);
             setPassword(userActual.password);
+            setOldPassword(userActual.password);
             setEmail(userActual.email);
             setProfileImageNoGravatar(userActual.profileImageNoGravatar);
             setId (userActual.id);
+            setChecked(false);
         }
         loadDataUser();
         
@@ -103,17 +122,23 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
                     fullWidth
                     required
                 />
+                <Checkbox
+                    checked={checked}
+                    onChange={handleCheckboxChange}
+                    inputProps={{ 'aria-label': 'modifier mot de passe' }}
+                /> Modifier mot de passe ?
                 <TextField
                     autoFocus
                     margin="dense"
                     id="password"
                     name="password"
-                    label="Username"
+                    label="nouveau mot de passe"
                     type="password"
                     value={password}
                     onChange={handleChange}
                     fullWidth
                     required
+                    disabled={checked ? false : true}
                 />
                 <TextField
                     autoFocus
