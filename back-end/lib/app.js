@@ -188,9 +188,66 @@ app.put('/channels/:id/messages/:creaId', async (req, res) => {
 // Retourne un tableau de la forme [ {"username":"user_1","id":"8157aa18-0ac8-45e3-ba97-ab42c2336c8b"},{...} ]
 app.get('/users', async (req, res) => {
   const users = await db.users.list();
-  console.log ("mauvais back: "+JSON.stringify(users));
+  
   res.json(users);
 });
+
+// Login
+// params: username et mdp
+// renvoie: 0 si auth réussie, 1 si username incorrect et 2 si mdp incorrect
+// en header: renvoie le token
+app.post('/users/login', async (req, res) => {
+    const data = await db.users.list();  // Liste des users
+    console.log ("Bjr "+req.body.username);
+    // Recup infos de login
+    const username = req.body.username;
+    const password = req.body.password;
+
+    // Recherche
+    let usernameTrouve = 0;
+    let passCorrespond = 0;
+    let userId = null;
+    let userName = null;
+
+    // Vérifier login et password
+    for (let i=0; i<data.length; ++i) {
+        if (data[i].username === username) {
+            usernameTrouve ++;
+            userId = data[i].id;
+            userName = data[i].username;
+    
+            if (data[i].password === password) {
+                passCorrespond ++;
+            }
+        }
+    }
+
+    if (usernameTrouve > 0 && passCorrespond > 0) 
+    {
+        const prKey = privateKey;
+
+        // JWT
+        var token = jwt.sign(
+            { 
+                sub: userId,
+                userName: userName
+            }, 
+            privateKey,
+            { expiresIn: '1h' }
+        );
+        res.header('Authorization','Bearer '+token);
+        console.log ("ici");
+        res.status(200).json({code:'0',token: token });
+    }
+    else if (usernameTrouve > 0 && passCorrespond == 0) { 
+        res.json({code: '2'});
+    }
+    else {   
+        res.json({code: '1'});
+    }
+
+});
+
 
 // Ajouter un user en BDD
 // En paramètres : req = {username: 'user_1'}

@@ -62,54 +62,14 @@ const Login = () => {
         // appel à l'API de récupération des utilisateurs et de vérification du login
         // {data} permet de ne récupérer que les données du get (sinon axios renvoie d'autres données )
         // axios est asynchrone, il faut attendre
-        const {data} = await api.apiLogin();
+        const code = await api.apiLogin(username,password);
 
-        // Afficher
-        console.log ("OOO "+JSON.stringify(data)+" "+data.length);
 
-        let usernameTrouve = 0;
-        let passCorrespond = 0;
-        let userId = null;
-        let userEmail = null;
-        let userName = null;
-
-        // Vérifier login et password
-        for (let i=0; i<data.length; ++i) {
-            if (data[i].username === username) {
-                usernameTrouve ++;
-                userId = data[i].id;
-                userEmail = data[i].email;
-                userName = data[i].username;
-                console.log ("Heidi: "+userId+" "+userEmail+" "+userName);
-                if (data[i].password === password) {
-                    passCorrespond ++;
-                }
-            }
-        }
-
-        if (usernameTrouve > 0 && passCorrespond > 0) 
+        if (code === '0')  // utilisateur trouvé
         {
-            //alert ("Trouvé !");
-            localStorage.setItem('userId',userId);
-            localStorage.setItem('userEmail',userEmail);
-            localStorage.setItem('userName',userName);
-            const prKey = privateKey;
-            console.log ("PK: "+prKey);
-            // JWT
-            var token = jwt.sign(
-                { 
-                    sub: userId,
-                    userName: userName
-                }, 
-                privateKey,
-                { expiresIn: '1h' }
-            );
-            localStorage.setItem('token',token);
-            console.log ("Token:"+token);
-
             window.location ="/Main";
         }
-        else if (usernameTrouve > 0 && passCorrespond == 0) {
+        else if (code==='2') {
             setErrorPassword(true);
             setErrorUsername(false);
             //alert ("Mauvais mot de passe");

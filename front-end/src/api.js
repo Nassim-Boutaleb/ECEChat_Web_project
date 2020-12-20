@@ -32,16 +32,19 @@ const apiSignup = (user) => {
     
 };
 
-// Renvoie la liste de ts les utilisateurs en BDD
-// Pas de paramètre
-// retourne : tableau de la forme [ {"username":"user_1","id":"8157aa18-0ac8-45e3-ba97-ab42c2336c8b","password":"eee"},{...} ]
+// Login d'un utilisateur 
+const apiLogin = async (username,password) => {
+    const response = await axios.post (`${url}/users/login`,{username: username,password: password});
+    //console.log("ARFFFF :"+response.data.code+" "+response.status+" "+response.data.token);
+    
+    // Stockage token:
+    if (response.data.code === '0') { 
+        localStorage.setItem('token',response.data.token);
+    }
 
-const apiLogin =  () => {
-    // appel à la route get/users qui retourne un tableau contenant l'ensemble des users
-    // de la forme [ {"username":"user_1","id":"8157aa18-0ac8-45e3-ba97-ab42c2336c8b"},{...} ]
-    return (
-        axios.get (`${url}/users`)
-    );
+    // retour code 
+    return response.data.code;
+   
 };
 
 // Vérifier si un token existe dans le stockage et s'il est valide
