@@ -285,7 +285,7 @@ const deleteMessage = async (message,channel,userConnected) => {
         message.content = 'message supprimé par son auteur';
         message.alive = false;
         console.log ("Del mess user: "+token);
-        const {data} = await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,message,
+        const {data} = await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,{message,channel},
         {
             headers : {
                 'authorization' :   'Bearer ' + token
@@ -296,6 +296,23 @@ const deleteMessage = async (message,channel,userConnected) => {
         return 'userDeletion'; 
     }
     
+}
+
+// Cette fonction modifie le contenu d'un message en BDD
+const modifyMessageContent = async (message,channel) => {
+    const creaId = message.creationForId;
+    const token = localStorage.getItem('token');
+    const channelId = message.channelId;
+
+    const {data} = await axios.put (`${url}/channels/${channelId}/messages/${creaId}`,{message,channel},
+        {
+            headers : {
+                'authorization' :   'Bearer ' + token
+            }
+    });
+
+    return data;
+
 }
 
 // Cette fonction déconnecte l'utilisteur en supprimant le token stocké dans localStorage
@@ -320,6 +337,7 @@ export default {
     deleteChannelMessages,
     deleteChannel,
     logout,
-    deleteMessage
+    deleteMessage,
+    modifyMessageContent
     
 };

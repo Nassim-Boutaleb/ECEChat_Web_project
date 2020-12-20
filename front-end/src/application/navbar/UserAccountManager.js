@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,60 +9,113 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import api from '../../api';
 
 // Boite de dialogue pour changer le nom du channel
-const UserAccountManager = ({open,handleClose,channels,setChannels,currentChannel}) => {
+const UserAccountManager = ({open,handleClose,userConnected}) => {
 
-    const [channelName,setChannelName] = useState('');
+    const [username,setUsername] = useState('');
+    const [password,setPassword] = useState('');
+    const [email,setEmail] = useState('');
+    const [gender,setGender] = useState('');
+    const [useEffectReload,setUseEffectReload] = useState (false);
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Modifier channel
-        //1) On récupère le channel dans une nouvelle variable à partir de son index et on le MAJ
-        let newChannel = channels[currentChannel];
-        newChannel.name = channelName;
-
-        //2) Mise a jour en base de données
-        await api.updateChannel (newChannel);
-
-        //3) Mise a jour du tableau channels avec setChannels et appel auto de Render()
-        let newChannelsList = channels.slice();
-        newChannelsList [currentChannel] = newChannel;
-        setChannels (newChannelsList);
+        
 
         //4) Fermer la boite de dialogue
         handleClose();
+
+        // 5) Recharger le use Effect la prochaine fois
+        setUseEffectReload(!useEffectReload);
     }
 
     const handleChange = (e) => {
-        setChannelName(e.target.value);
+        const champModifie = e.target.name;
+        const newValue = e.target.value;
+
+        if (champModifie === 'username') {
+            setUsername(newValue);
+        }
+        else if (champModifie === 'password') {
+            setPassword(newValue);
+        }
+        else if (champModifie === 'email') {
+            setEmail (newValue);
+        }
+        
     }
+
+    const handleClickClose = () => {
+        setUseEffectReload(!useEffectReload);
+        handleClose();
+    }
+
+    // charger les données actuelles de l'utilisateur
+    useEffect ( ()=> {
+        const loadDataUser = async () => {
+            //1) Appel à l'API qui à partir du token récupère les données du user
+            const userActual = await api.getUser();
+
+            //2) remplir les champs
+            setUsername(userActual.username);
+            setPassword(userActual.password);
+            setEmail(userActual.email);
+        }
+        loadDataUser();
+        
+    },[useEffectReload]);
 
     return (
         <div>
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Nom du channel</DialogTitle>
+            <DialogTitle id="form-dialog-title">Modification informations personnelles</DialogTitle>
             <DialogContent>
             <DialogContentText>
-                Saisir le nouveau nom du channel
+                Saisir vos nouvelles informations personnelles
             </DialogContentText>
-            <form onSubmit={handleSubmit} id='ChannelNameForm'>
-            <TextField
-                autoFocus
-                margin="dense"
-                id="ChannelName"
-                label="Nouveau nom du channel"
-                type="text"
-                value={channelName}
-                onChange={handleChange}
-                required
-                fullWidth
-            />
+            <form onSubmit={handleSubmit} id='userForm'>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="username"
+                    name="username"
+                    label="Username"
+                    type="text"
+                    value={username}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                />
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="password"
+                    name="password"
+                    label="Username"
+                    type="password"
+                    value={password}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                />
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="email"
+                    name="email"
+                    label="adresse mail"
+                    type="email"
+                    value={email}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                />
             </form>
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleClickClose} color="primary">
                 Annuler
             </Button>
-            <Button type='submit' color="primary" form='ChannelNameForm'>
+            <Button type='submit' color="primary" form='userForm'>
                 Valider
             </Button>
             </DialogActions>

@@ -37,7 +37,16 @@ const ManageAccount = ({userConnected}) => {
     const isMenuOpen = Boolean(anchorEl);
 //____________________________________________________
     // Gestion du sous-menu modifier les données utilisateur
+    const [manageUserMenuOpen, setManageUserMenuOpen] = React.useState(false);
 
+    const handleManageUserMenuOpen = () => {
+        setManageUserMenuOpen(true);
+        handleMenuClose();
+    };
+  
+    const handlemanageUserMenuClose = () => {
+        setManageUserMenuOpen(false);
+    };
 
 //_________________________________________________________
     // Gestion de la déconnexion
@@ -59,7 +68,12 @@ const ManageAccount = ({userConnected}) => {
           open={isMenuOpen}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleMenuClose}>Modifier mes informations personnelles</MenuItem>
+          <MenuItem  onClick={handleManageUserMenuOpen} >Modifier mes informations personnelles</MenuItem>
+            <UserAccountManager
+                open={manageUserMenuOpen}
+                userConnected={userConnected}
+                handleClose={handlemanageUserMenuClose}
+            />
           <MenuItem onClick={logout}>Déconnexion</MenuItem>
         </Menu>
     );

@@ -169,8 +169,13 @@ app.delete('/channels/:id/messages/:creaId', async (req, res) => {
   res.status(201).json(data);
 });
 
+// modifier le contenu d'un message
+// Recoit en paramètre le nouveau message. Les id (channel et creation) sont contenus dans l'objet message
+// En paramètre également: le channel
+// En paramètre local depuis le middleware: l'id du connected user
 app.put('/channels/:id/messages/:creaId', async (req, res) => {
-  const data = await db.messages.update(req.body);
+  console.log ("EUHHH: "+req.body.message);
+  const data = await db.messages.update(req.body.message);
   res.status(201).json(data);
 });
 

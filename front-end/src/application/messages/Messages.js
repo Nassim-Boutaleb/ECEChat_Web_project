@@ -64,7 +64,17 @@ const Messages =  ({messages,channel,userConnected,setMessages,isCreator}) => {
         }
     }
 
-    console.log ("messages: ic "+isCreator);
+    // Cette fonction permet la modification du contenu d'un message
+    // prend en paramètre l'index du message et le nouveau message
+    const handleModifyMessage = async (index,message,channel) => {
+        //1. appel à l'api pour modification en BDD
+        const data = await api.modifyMessageContent(message,channel);
+
+        //2.Mise a jour du message dans le state
+        const newMessagesList = messages.slice();
+        newMessagesList[index] = message;
+        setMessages(newMessagesList);
+    }
     
     
     
@@ -81,6 +91,8 @@ const Messages =  ({messages,channel,userConnected,setMessages,isCreator}) => {
                         index={index}
                         handleDeleteMessage={handleDeleteMessage} 
                         isCreator={isCreator}
+                        handleModifyMessage={handleModifyMessage}
+                        channel={channel}
                     />
                 ))}
             </ul>

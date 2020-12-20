@@ -82,7 +82,7 @@ const Nl2br = message => (
 // Composant message qui contient un message individuel. Une prop = le message à afficher
 // de forme  {"author":"47","authorUsername":"T9","authorEmail":"test@mail.com","content":"C3 1","creation":1608381214566,"channelId":"3b","creationForId":"1608381214579429"}
 
-const Message = ({message,me,index,handleDeleteMessage,isCreator}) => {
+const Message = ({message,me,index,handleDeleteMessage,isCreator,handleModifyMessage,channel}) => {
     
     moment.locale('fr', {
         months : 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split('_'),
@@ -150,13 +150,13 @@ const Message = ({message,me,index,handleDeleteMessage,isCreator}) => {
     const alive = message.alive ;  // message supprimé ?
 
     let menuMessageDisplay = me ? true : false ;  // afficher le menu de gestion du message si je suis l'auteur du message
-    if (isCreator) {  // si je suis le créateur du channel, j'ai tt pouvoir !!
+    if (isCreator === 'true') {  // si je suis le créateur du channel, j'ai tt pouvoir !!
         menuMessageDisplay = true;
     }
     if (message.alive === false) {
         menuMessageDisplay = false ;  // si message supprimé: on le resupprime pas ni on le modifie
     }
-    console.log ("YALA: "+isCreator);
+    
     return (
         <div style={me ? styles.wrapperFromMe : styles.wrapperFromAnother}>
             <div style={!alive ? styles.messageDeleted : me ? styles.messageFromMe : styles.messageFromAnother}>
@@ -177,6 +177,9 @@ const Message = ({message,me,index,handleDeleteMessage,isCreator}) => {
                     index={index} 
                     message={message} 
                     handleDeleteMessage={handleDeleteMessage}
+                    handleModifyMessage={handleModifyMessage}
+                    me={me}
+                    channel={channel}
                 />
             }
             
