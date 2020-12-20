@@ -78,7 +78,6 @@ const ManageAccount = ({userConnected,setUserConnected}) => {
           <MenuItem onClick={logout}>Déconnexion</MenuItem>
         </Menu>
     );
-    
     return (
         <div>
             <IconButton
@@ -89,7 +88,13 @@ const ManageAccount = ({userConnected,setUserConnected}) => {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
             >
-                <AccountCircle fontSize='large' />
+                {
+                    userConnected.avatarPreference === 'uploadOwnRd' ?
+                    <img src={require(`./../../Images/${userConnected.profileImageNoGravatar}`) } width='30px'/> :
+                    userConnected.avatarPreference === 'defaultRd' ?
+                    <img src={require(`./../../login${userConnected.profileImageNoGravatar}.jpg`) } width='30px'/> :
+                    <AccountCircle fontSize='large' /> 
+                }   
             </IconButton>
             {renderMenu}
         </div>

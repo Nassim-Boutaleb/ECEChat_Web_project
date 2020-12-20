@@ -12,6 +12,10 @@ import AppImageUpload from './AppImageUpload'
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import TextField from '@material-ui/core/TextField';
 
 // Styles
 const styles = {
@@ -26,7 +30,7 @@ const styles = {
         marginRight: '.5rem'
     },
     send: {
-        backgroundColor: '#D6DDEC',
+        backgroundColor: '#9096A3',
         padding: '.2rem .5rem',
         border: 'none',
         ':hover': {
@@ -35,8 +39,15 @@ const styles = {
           color: '#fff',
         },
     },
-    root :{
-        color: 'black'
+    root: {
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#373B44'
+    },
+    textFields : {
+        margin: '20px'
     }
 };
 
@@ -151,3 +162,41 @@ const Signup = () => {
 };
 
 export default Signup;
+
+/**
+ * return (
+        <div style={styles.root}>
+            <Card style={styles.card} >
+                <CardContent style={styles.cardContent} > 
+                    <TextField style={styles.textFields}
+                        label="Email"
+                        type="text" 
+                        name="email"
+                        value={email} 
+                        onChange={handleChange} 
+                    />
+                    <TextField style={styles.textFields}
+                        label="Username"
+                        type="text" 
+                        name="username"
+                        value={username} 
+                        onChange={handleChange}
+                    />
+                    <TextField style={styles.textFields}
+                        label="Password"
+                        type="text" 
+                        name="password"
+                        value={password} 
+                        onChange={handleChange}
+                    />
+                </CardContent>
+                <CardActions style={styles.cardContent}>
+                    <form style={styles.form}  onSubmit={handleSubmit}>
+                        <input type="submit" value="Inscription" style={styles.send} />
+                    </form>
+                </CardActions>
+             </Card>
+        </div>
+    )
+};
+ */
