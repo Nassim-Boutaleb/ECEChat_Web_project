@@ -8,6 +8,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Checkbox from '@material-ui/core/Checkbox';
 import api from '../../api';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 // Boite de dialogue pour changer le nom du channel
 const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) => {
@@ -23,6 +25,7 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
     const [checked,setChecked] = useState(false);
     const [errorUsername,setErrorUsername] = useState(false);
     const [errorEmail,setErrorEmail] = useState(false);
+    const [light,setLight] = useState(false);
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -90,6 +93,16 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
         }
     }
 
+    const handleLight = (e) => {
+        setLight (e.target.checked);
+        if (e.target.checked === true) {
+            alert("Light mode activé");
+        }
+        else {
+            alert("Dark mode");
+        }
+    }
+
     const handleClickClose = () => {
         setUseEffectReload(!useEffectReload);
         handleClose();
@@ -112,6 +125,7 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
             setChecked(false);
             setErrorEmail(false);
             setErrorUsername(false);
+            setLight(false);
         }
         loadDataUser();
         
@@ -172,6 +186,11 @@ const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) =
                     error={errorEmail}
                     helperText={errorEmail&&'Cet email existe deja !'}
                 />
+                <FormControlLabel
+                    control={<Switch checked={light} onChange={handleLight} name="light" />}
+                    label="Light mode"
+                />
+                
             </form>
             </DialogContent>
             <DialogActions>
