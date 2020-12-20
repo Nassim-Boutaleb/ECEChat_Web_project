@@ -8,7 +8,6 @@ const ImageContainer = ({newImage}) => {
     const url = 'http://localhost:3001' ;
     const getImages = async () => {
         try {
-            //const res = await axios.get(API_URL + 'api/images');
             const res = await axios.get(`${url}/Image`);
             if (!res.data.files){
                 setFallback(res.data.msg);

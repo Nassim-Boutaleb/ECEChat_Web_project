@@ -38,6 +38,10 @@ const styles = {
     },
     textFields : {
         margin: '20px'
+    },
+    formS: {
+        display:'flex',
+        flexDirection: 'column'
     }
     
 };
@@ -92,30 +96,32 @@ const Login = () => {
         
             <Card style={styles.card}>
                 <CardContent style={styles.cardContent}>
-                    <TextField style={styles.textFields}
-                        id="username"
-                        name="username"
-                        label="username"
-                        type="text"
-                        value={username} 
-                        onChange={handleChange}
-                        error={errorUsername}
-                        helperText={errorUsername?'Cet utilisateur n\'existe pas': ''}
-                        autoFocus
-                    />
-                    <TextField style={styles.textFields}
-                        id="password"
-                        name="password"
-                        label="mot de passe"
-                        type="password"
-                        value={password} 
-                        onChange={handleChange}
-                        error={errorPassword}
-                        helperText={errorPassword?'Mot de passe incorrect': ''}
-                    />
+                    <form onSubmit={handleSubmit} id="loginForm" style={styles.formS}>
+                        <TextField style={styles.textFields}
+                            id="username"
+                            name="username"
+                            label="username"
+                            type="text"
+                            value={username} 
+                            onChange={handleChange}
+                            error={errorUsername}
+                            helperText={errorUsername?'Cet utilisateur n\'existe pas': ''}
+                            autoFocus
+                        />
+                        <TextField style={styles.textFields}
+                            id="password"
+                            name="password"
+                            label="mot de passe"
+                            type="password"
+                            value={password} 
+                            onChange={handleChange}
+                            error={errorPassword}
+                            helperText={errorPassword?'Mot de passe incorrect': ''}
+                        />
+                    </form>
                 </CardContent>
                 <CardActions style={styles.cardContent}>
-                    <Button variant="outlined" onClick={handleSubmit} color="primary">Se connecter</Button>
+                    <Button variant="outlined" type="submit" color="primary" form="loginForm">Se connecter</Button>
                     <p style={{color:'white'}}>Pas de compte ? </p>
                     <Button variant="outlined" onClick={()=>{window.location='/signup'}} color="secondary">Créer un compte</Button>
                 </CardActions>

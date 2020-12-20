@@ -11,7 +11,6 @@ const uploadAction = async (image) => {
         }
     }
     try {
-        //const res = await axios.post(API_URL + 'api/images', fd, config);
         const res = await axios.post(`${url}/Image`, fd, config);
         return res.data;
 
