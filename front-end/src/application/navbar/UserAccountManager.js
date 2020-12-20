@@ -9,17 +9,33 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import api from '../../api';
 
 // Boite de dialogue pour changer le nom du channel
-const UserAccountManager = ({open,handleClose,userConnected}) => {
+const UserAccountManager = ({open,handleClose,userConnected,setUserConnected}) => {
 
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
     const [email,setEmail] = useState('');
     const [gender,setGender] = useState('');
+    const [profileImageNoGravatar,setProfileImageNoGravatar] = useState('');
+    const [id,setId] = useState();
     const [useEffectReload,setUseEffectReload] = useState (false);
     
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        //1) Construire l'objet user avec les données (nouvelles ou anciennes)
+        const updatedUser = {
+            username: username,
+            email: email,
+            password: password,
+            profileImageNoGravatar : profileImageNoGravatar,
+        }
+
+        //2) Mise a jour en BDD
+        const data = await api.updateUser(updatedUser,id);
+
+        //3) Mise a jour du state userConnected
+        updatedUser.id = id;
+        setUserConnected(updatedUser);
 
         //4) Fermer la boite de dialogue
         handleClose();
@@ -59,6 +75,8 @@ const UserAccountManager = ({open,handleClose,userConnected}) => {
             setUsername(userActual.username);
             setPassword(userActual.password);
             setEmail(userActual.email);
+            setProfileImageNoGravatar(userActual.profileImageNoGravatar);
+            setId (userActual.id);
         }
         loadDataUser();
         

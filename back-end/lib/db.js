@@ -246,9 +246,9 @@ module.exports = {
       if(!id) throw Error ('No id provided');
   
       //console.log ("BD: "+`users:${id}`, JSON.stringify(user));
-      await db.put(`users:${id}`, JSON.stringify(user))
+      await db.put(`users:${id}`, JSON.stringify(user));
       //console.log ("DBR: "+JSON.stringify(merge(user, {id: id} ))); //dbg
-      return merge(user, {id: id})
+      return merge(user, {id: id});
     },
 
     // TODO

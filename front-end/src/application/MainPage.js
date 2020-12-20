@@ -74,6 +74,7 @@ const MainPage = () => {
             <Navbar 
               handleDrawerOpen={handleDrawerOpen}
               userConnected={userConnected}
+              setUserConnected={setUserConnected}
               channels={channels}
               setChannels={setChannels}
               currentChannel={currentChannel}

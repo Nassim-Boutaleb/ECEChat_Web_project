@@ -21,7 +21,7 @@ const styles = {
     
   };
 
-const ManageAccount = ({userConnected}) => {
+const ManageAccount = ({userConnected,setUserConnected}) => {
     
     // Gestion du menu
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -73,6 +73,7 @@ const ManageAccount = ({userConnected}) => {
                 open={manageUserMenuOpen}
                 userConnected={userConnected}
                 handleClose={handlemanageUserMenuClose}
+                setUserConnected={setUserConnected}
             />
           <MenuItem onClick={logout}>Déconnexion</MenuItem>
         </Menu>

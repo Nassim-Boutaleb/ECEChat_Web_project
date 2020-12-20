@@ -315,6 +315,20 @@ const modifyMessageContent = async (message,channel) => {
 
 }
 
+// Cette fonction met a jour les informations d'un utilisateur en BDD
+const updateUser = async (updatedUser,userId) => {
+    const token = localStorage.getItem ('token');
+
+    const {data} = await axios.put (`${url}/users/${userId}`,updatedUser,
+    {
+        headers : {
+            'authorization' :   'Bearer ' + token
+        }
+    });
+
+    return data;
+}
+
 // Cette fonction déconnecte l'utilisteur en supprimant le token stocké dans localStorage
 const logout = () => {
     localStorage.clear();
@@ -338,6 +352,7 @@ export default {
     deleteChannel,
     logout,
     deleteMessage,
-    modifyMessageContent
+    modifyMessageContent,
+    updateUser
     
 };

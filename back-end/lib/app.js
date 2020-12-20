@@ -210,12 +210,12 @@ app.get('/users/:id', async (req, res) => {
 });
 
 // Met a jour les données d'un utilisateur à partir de son id
-// En paramètre : l'id de l'utilisateur à mettre à jour et le nouvel objet utilisateur de type {"username":"user_1","id":"3af582ad-b589-483c-97a8-290f2712f8d3",...}
+// En paramètre : l'id de l'utilisateur à mettre à jour et le nouvel objet utilisateur de type {"username":"user_1",...,...}
 // Renvoie : l'utilisateur mis à jour
 app.put('/users/:id', async (req, res) => {
-  const user = await db.users.update(req.params.id,req.body)
-  res.json(user)
+    const user = await db.users.update(req.params.id,req.body);
+    res.json(user);
 });
 
 module.exports = app
-// Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess // test de port
+// Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess // test de port cmd
