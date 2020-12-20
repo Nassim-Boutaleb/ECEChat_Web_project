@@ -1,6 +1,5 @@
 import React, { useState, useEffect} from 'react';
 import axios from 'axios';
-//import {API_URL} from './url';
 
 const ImageContainer = ({newImage}) => {
     const [ images, setImages] = useState([]);
@@ -24,7 +23,7 @@ const ImageContainer = ({newImage}) => {
     }, [newImage]);
 
     const configureImage = image => {
-        //return API_URl + image;
+       
         return image;
     }
         

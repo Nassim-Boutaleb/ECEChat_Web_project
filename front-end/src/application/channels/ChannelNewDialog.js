@@ -183,9 +183,6 @@ const ChannelNewDialog = ({setChannels,channels}) => {
             Créer le channel
           </Button>
 
-          <Button onClick={dispList} color="primary">
-            DispList
-          </Button>
 
         </DialogActions>
       
