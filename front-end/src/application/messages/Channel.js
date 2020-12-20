@@ -52,7 +52,7 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
         // 1. on récupère en BDD un tableau de la forme 
         //{"author": "47","content": "Oups !","creation": 1608379742248,"channelId": "cf","creationForId": "1608379742287325"}
         const messagesGet = await api.getMessages(channel.id);
-        console.log ("les messages de "+channel.name+"= "+JSON.stringify(messagesGet));
+        //console.log ("les messages de "+channel.name+"= "+JSON.stringify(messagesGet));
 
         //2. On souhaite y ajouter un champ authorUsername contenant le username de celui qui a posté le message
         // et son email (pour gravatar)
@@ -82,7 +82,7 @@ const Channel =  ({channel,userConnected,isLoading,setLoading}) => {
                     lastModified: messagesGet[i].lastModified,
                 })
             }
-            console.log ("les messages de "+channel.name+"= "+JSON.stringify(messagesWithAuthorUsername));
+            //console.log ("les messages de "+channel.name+"= "+JSON.stringify(messagesWithAuthorUsername));
             setMessages (messagesWithAuthorUsername);
         }
         else {

@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import IconButton from '@material-ui/core/IconButton';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -16,7 +16,7 @@ const styles = {
     
   };
 
-const ManageChannel = ({channels,setChannels,currentChannel,setCurrentChannel}) => {
+const ManageChannel = ({channels,setChannels,currentChannel,setCurrentChannel,userConnected}) => {
     // Gestion du menu itself
     const [anchorEl, setAnchorEl] = React.useState(null);
     
@@ -71,6 +71,31 @@ const ManageChannel = ({channels,setChannels,currentChannel,setCurrentChannel}) 
     };
 
 //_________________________________________________________________
+    // Gestion des permissions
+    // 0= user 1= admin 2= createur
+    const [authorization,setAuthorization] = useState(0);
+    useEffect (() => {
+        let trouve=0;
+        if (userConnected.id === channels[currentChannel].creatorId) {
+            setAuthorization(2);  // je suis le créateur de ce channel
+        }
+        else {
+            for (let i=0; i<channels[currentChannel].idUsers.length; ++i) {
+                if (userConnected.id === channels[currentChannel].idUsers[i].id) {
+                    if (channels[currentChannel].idUsers[i].status === 'administrateur') {
+                        trouve ++;
+                    }
+                }
+            }
+            if (trouve <= 0) {
+                setAuthorization(0);
+            }
+            else if (trouve > 0) {
+                setAuthorization(1);
+            }
+        }
+    },[currentChannel,channels]);
+    console.log ("Authorization: "+authorization+" channel : "+channels[currentChannel].name);
 
     // Affichage menu
     const renderMenu = (
@@ -83,8 +108,8 @@ const ManageChannel = ({channels,setChannels,currentChannel,setCurrentChannel}) 
           open={isMenuOpen}
           onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleChannelNameOpen}>Modifier nom du channel</MenuItem>
-                <ChannelNameManager 
+            {authorization===2 && <MenuItem onClick={handleChannelNameOpen}>Modifier nom du channel</MenuItem> }
+                 <ChannelNameManager 
                     open={ChannelNameOpen} 
                     handleClose={handleChannelNameClose} 
                     channels= {channels}
@@ -98,8 +123,18 @@ const ManageChannel = ({channels,setChannels,currentChannel,setCurrentChannel}) 
                         channels= {channels}
                         setChannels= {setChannels}
                         currentChannel={currentChannel}
+                        authorization={authorization}
                 />
-            <MenuItem onClick={handleChannelDeleteOpen}>Supprimer le channel/Quitter le channel</MenuItem>
+            {authorization == 2 && <MenuItem onClick={handleChannelDeleteOpen}>Supprimer le channel</MenuItem> }
+                <ChannelDeleteAlert
+                        open={ChannelDeleteOpen}
+                        handleClose={handleChannelDeleteClose}
+                        channels= {channels}
+                        setChannels= {setChannels}
+                        currentChannel={currentChannel}
+                        setCurrentChannel={setCurrentChannel}
+                />
+            {authorization < 2 && <MenuItem onClick={handleChannelDeleteOpen}>Quitter le channel</MenuItem> }
                 <ChannelDeleteAlert
                         open={ChannelDeleteOpen}
                         handleClose={handleChannelDeleteClose}

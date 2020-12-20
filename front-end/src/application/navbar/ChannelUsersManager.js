@@ -22,7 +22,7 @@ const styles = {
 };
 
 // Boite de dialogue pour changer le nom du channel
-const ChannelUsersManager = ({open,handleClose,channels,setChannels,currentChannel}) => {
+const ChannelUsersManager = ({open,handleClose,channels,setChannels,currentChannel,authorization}) => {
 
     // Gestion du nouvel utilisateur a ajouter
     const [userName,setUserName] = useState('');
@@ -176,10 +176,10 @@ const ChannelUsersManager = ({open,handleClose,channels,setChannels,currentChann
             <DialogContent>
             
             <DialogContentText>
-                Ajouter un utilisateur pour le {channels[currentChannel].name}
+               {authorization > 0 && `Ajouter un utilisateur pour le ${channels[currentChannel].name}` }
             </DialogContentText>
             
-            <div style={styles.userInput}>
+            { authorization >0 && <div style={styles.userInput}>
                 <TextField
                     //margin="dense"
                     id="userName"
@@ -192,7 +192,7 @@ const ChannelUsersManager = ({open,handleClose,channels,setChannels,currentChann
                     error={errorUser}
                     helperText={errorUser?'Cet utilisateur n\'existe pas': ''}
                     style={styles.input}
-                />
+                /> 
 
                 <Select
                     labelId="Statut utilisateur"
@@ -204,15 +204,15 @@ const ChannelUsersManager = ({open,handleClose,channels,setChannels,currentChann
                     <MenuItem value='utilisateur'>utilisateur</MenuItem>
                     <MenuItem value='administrateur'>administrateur</MenuItem>
                 </Select>
-            </div>
+            </div> }
 
-            <Button variant="contained" onClick={handleAddUser} color="secondary">
+            {authorization >0 && <Button variant="contained" onClick={handleAddUser} color="secondary">
                 Ajouter utilisateur au channel
-            </Button>
+            </Button>  }
 
             <DialogContentText>
                 Liste des utilisateurs du channel.
-                Vous pouvez modifier les permissions
+                {authorization >0 && 'Vous pouvez modifier les permissions' }
             </DialogContentText>
 
             <ul>
@@ -229,12 +229,12 @@ const ChannelUsersManager = ({open,handleClose,channels,setChannels,currentChann
                                         value={it.status}
                                         onChange={(e)=>handleChangeStatusInList(e,index)}
                                         name='userStatusInList'
-                                        
+                                        disabled={authorization===0 ? true : false}
                                     >
                                         <MenuItem value='utilisateur'>utilisateur</MenuItem>
                                         <MenuItem value='administrateur'>administrateur</MenuItem>
                                     </Select> 
-                                    <IconButton aria-label="delete" onClick={()=> delUser(index)}><DeleteIcon /></IconButton> 
+                                    <IconButton aria-label="delete" disabled={authorization===0 ? true : false}  onClick={()=> delUser(index) }><DeleteIcon /></IconButton> 
                                 </span>
                                 : <i>Propriétaire du channel </i>
                             }
@@ -250,9 +250,9 @@ const ChannelUsersManager = ({open,handleClose,channels,setChannels,currentChann
                 Annuler
             </Button>
             
-            <Button onClick={handleSubmit} color="primary">
+            {authorization >0 && <Button onClick={handleSubmit} color="primary">
                 Mettre a jour le channel
-            </Button>
+            </Button> }
 
 
             </DialogActions>
